@@ -81,7 +81,7 @@ class AudioRecorder:
             callback=audio_callback
         )
         self.stream.start()
-        print(f"\n🎤 Recording started at {self.sample_rate}Hz, {self.channels} channel(s)")
+        print(f"\n[REC] Recording started at {self.sample_rate}Hz, {self.channels} channel(s)")
     
     def stop_recording(self) -> Optional[np.ndarray]:
         """
@@ -99,7 +99,7 @@ class AudioRecorder:
         self.stream.close()
         
         duration = time.time() - self.start_time
-        print(f"⏹️  Recording stopped. Duration: {duration:.2f} seconds")
+        print(f"[STOP] Recording stopped. Duration: {duration:.2f} seconds")
         
         # Concatenate all audio chunks
         if self.audio_data:
@@ -143,7 +143,7 @@ class AudioRecorder:
             wf.writeframes(audio_data.tobytes())
         
         file_size = filepath.stat().st_size / 1024  # KB
-        print(f"💾 Saved to: {filepath} ({file_size:.1f} KB)")
+        print(f"[SAVE] Saved to: {filepath} ({file_size:.1f} KB)")
         
         return str(filepath)
     
