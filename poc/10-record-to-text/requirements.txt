@@ -1,0 +1,10 @@
+# Record-to-Text POC Requirements
+# Audio recording
+sounddevice==0.4.6
+numpy==1.26.0
+scipy==1.11.3
+
+# Note: wave module is part of Python standard library, no install needed
+
+# POC 09 integration (reuse existing transcription)
+# Run: pip install -r ../09-speech-to-text/requirements.txt
