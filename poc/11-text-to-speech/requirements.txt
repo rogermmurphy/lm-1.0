@@ -1,0 +1,31 @@
+# POC 11: Text-to-Speech Requirements
+# Based on comprehensive research + Little Monster requirements
+
+# Environment Management
+python-dotenv>=1.0.0     # Load credentials from .env file
+
+# PRIMARY for DEVELOPMENT (500k chars/month FREE!)
+azure-cognitiveservices-speech>=1.31.0  # Azure TTS (FREE tier, SSML support)
+
+# PRODUCTION Quality Option
+openai>=1.0.0            # OpenAI TTS-1-HD (Best quality, $0.90 per 30k chars)
+
+# LOCAL/OFFLINE Options (Little Monster approach)
+TTS>=0.22.0              # Coqui TTS (local, Jenny voice, like Little Monster)
+torch>=2.0.0             # Required for Coqui TTS
+soundfile>=0.12.1        # Audio file handling for Coqui
+
+# FREE Online Backups
+edge-tts>=6.1.0          # Microsoft Edge TTS (FREE, high quality)
+pyttsx3>=2.90            # Offline fallback (works without internet)
+
+# Audio Playback & Analysis
+pygame>=2.5.0            # Audio playback
+numpy>=1.24.0            # Audio analysis for mouth sync (Little Monster feature)
+
+# Async Support
+aiofiles>=23.0.0         # Async file operations
+
+# Testing
+pytest>=7.4.0            # Testing framework
+pytest-asyncio>=0.21.0   # Async test support

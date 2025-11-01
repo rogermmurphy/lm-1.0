@@ -1,0 +1,11 @@
+# POC 11: Azure TTS Only (Minimal Install)
+# Use this if full requirements.txt fails due to Coqui TTS compilation issues
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# Azure TTS (PRIMARY)
+azure-cognitiveservices-speech>=1.31.0
+
+# Audio Playback
+pygame>=2.5.0

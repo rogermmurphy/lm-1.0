@@ -1,0 +1,18 @@
+# POC 11.1: Coqui TTS Comparison
+# Attempting to install Coqui TTS for benchmark comparison with Azure
+
+# Environment
+python-dotenv>=1.0.0
+
+# Try pre-built Coqui TTS (may work without C++ compiler)
+# If this fails, we'll document why and stick with Azure
+TTS>=0.22.0
+
+# Coqui requirements
+torch>=2.0.0
+torchaudio>=2.0.0
+soundfile>=0.12.1
+numpy>=1.24.0
+
+# Audio playback
+pygame>=2.5.0
