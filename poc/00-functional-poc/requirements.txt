@@ -1,0 +1,15 @@
+# Functional POC Requirements
+# Install with: pip install -r requirements.txt
+
+# ChromaDB for vector database
+chromadb>=0.4.15
+
+# HTTP requests for Ollama API
+requests>=2.31.0
+
+# Optional but recommended for better PDF support
+# Uncomment if you need PDF loading:
+# pypdf2>=3.0.1
+# pdfplumber>=0.10.3
+# langchain>=0.1.0
+# langchain-community>=0.0.10

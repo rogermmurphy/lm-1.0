@@ -1,0 +1,14 @@
+# Speech-to-Text POC Requirements
+# Core Whisper library - faster version
+openai-whisper==20231117
+faster-whisper==1.0.3
+
+# Audio processing
+ffmpeg-python==0.2.0
+
+# Database and queue
+psycopg2-binary==2.9.9
+redis==5.0.1
+
+# Utilities
+python-dotenv==1.0.0

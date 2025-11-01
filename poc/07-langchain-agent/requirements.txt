@@ -1,0 +1,10 @@
+# LangChain Agent Requirements
+
+# LangChain core
+langchain>=0.1.0
+langchain-community>=0.0.10
+langchain-ollama>=0.0.1
+
+# Already installed from POC 0
+chromadb>=0.4.15
+requests>=2.31.0

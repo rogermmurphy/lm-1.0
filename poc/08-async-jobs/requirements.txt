@@ -1,0 +1,10 @@
+# Async Job Processing Requirements
+
+# PostgreSQL adapter
+psycopg2-binary>=2.9.9
+
+# Redis for job queue  
+redis>=5.0.0
+
+# HTTP requests for Presenton API
+requests>=2.31.0
