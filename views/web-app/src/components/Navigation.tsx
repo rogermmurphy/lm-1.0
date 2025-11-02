@@ -20,6 +20,7 @@ export default function Navigation() {
     { href: '/dashboard/transcribe', label: 'Transcribe', icon: '🎤' },
     { href: '/dashboard/tts', label: 'Text-to-Speech', icon: '🔊' },
     { href: '/dashboard/materials', label: 'Materials', icon: '📚' },
+    { href: '/dashboard/logs', label: 'Logs', icon: '🔍' },
   ];
 
   return (

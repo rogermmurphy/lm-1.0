@@ -3,8 +3,11 @@
  * Connects to API Gateway at http://localhost
  */
 import axios from 'axios';
+import { logger } from './logger';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
+logger.info('API', 'API Client initializing', { baseURL: API_URL });
 
 const api = axios.create({
   baseURL: API_URL,
@@ -13,11 +16,18 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add JWT token
+// Request interceptor to add JWT token and log requests
 api.interceptors.request.use(
   (config) => {
+    logger.debug('API Request', `${config.method?.toUpperCase()} ${config.url}`, {
+      headers: config.headers,
+      data: config.data,
+      params: config.params
+    });
+    
     // Don't add token for auth endpoints
     if (config.url?.includes('/api/auth/')) {
+      logger.debug('API Request', 'Skipping token for auth endpoint');
       return config;
     }
     
@@ -26,20 +36,39 @@ api.interceptors.request.use(
       const token = localStorage.getItem('access_token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+        logger.debug('API Request', 'Added JWT token to request');
+      } else {
+        logger.warn('API Request', 'No JWT token found in localStorage');
       }
     }
     
     return config;
   },
   (error) => {
+    logger.error('API Request', 'Request interceptor error', error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor to handle token refresh
+// Response interceptor to handle token refresh and log responses
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    logger.debug('API Response', `${response.status} ${response.config.url}`, {
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data,
+      headers: response.headers
+    });
+    return response;
+  },
   async (error) => {
+    logger.error('API Response', `Error: ${error.response?.status || 'Network'} ${error.config?.url}`, {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      message: error.message
+    });
+    
     const originalRequest = error.config;
     
     // If 401 and not already retrying, try to refresh token
