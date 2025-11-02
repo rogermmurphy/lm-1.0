@@ -25,19 +25,22 @@ class Settings(BaseSettings):
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
     
+    # LLM Provider Selection
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "ollama")  # "ollama" or "bedrock"
+    
     # Ollama Configuration (Local LLM)
     OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
     
-    # ChromaDB Configuration (Vector Database for RAG)
-    CHROMADB_HOST: str = os.getenv("CHROMADB_HOST", "localhost")
-    CHROMADB_PORT: int = int(os.getenv("CHROMADB_PORT", "8000"))
-    
-    # AWS Bedrock (Optional Cloud LLM)
-    USE_BEDROCK: bool = os.getenv("USE_BEDROCK", "false").lower() == "true"
+    # AWS Bedrock Configuration (Cloud LLM - Fast Testing)
+    BEDROCK_MODEL: str = os.getenv("BEDROCK_MODEL", "anthropic.claude-3-sonnet-20240229-v1:0")
     AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
     AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "")
     AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+    
+    # ChromaDB Configuration (Vector Database for RAG)
+    CHROMADB_HOST: str = os.getenv("CHROMADB_HOST", "localhost")
+    CHROMADB_PORT: int = int(os.getenv("CHROMADB_PORT", "8000"))
     
     class Config:
         env_file = ".env"
