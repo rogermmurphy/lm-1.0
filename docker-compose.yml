@@ -221,6 +221,30 @@ services:
       - lm-network
     command: python src/worker.py
 
+  # Class Management Service
+  class-management-service:
+    build:
+      context: .
+      dockerfile: services/class-management/Dockerfile
+    container_name: lm-class-mgmt
+    ports:
+      - "8006:8005"
+    volumes:
+      - ./services/class-management/src:/app/src
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lm-network
+
   # API Gateway
   nginx:
     image: nginx:alpine

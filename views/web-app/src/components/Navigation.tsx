@@ -16,6 +16,8 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
+    { href: '/dashboard/classes', label: 'Classes', icon: '📖' },
+    { href: '/dashboard/assignments', label: 'Assignments', icon: '📝' },
     { href: '/dashboard/chat', label: 'AI Chat', icon: '💬' },
     { href: '/dashboard/transcribe', label: 'Transcribe', icon: '🎤' },
     { href: '/dashboard/tts', label: 'Text-to-Speech', icon: '🔊' },

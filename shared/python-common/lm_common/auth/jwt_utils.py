@@ -183,3 +183,48 @@ def get_token_expiration(token: str) -> Optional[datetime]:
         pass
     
     return None
+
+
+# FastAPI dependency for authentication
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer()
+
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+) -> Dict[str, Any]:
+    """
+    FastAPI dependency to get current authenticated user
+    
+    Args:
+        credentials: HTTP Bearer token from request
+        
+    Returns:
+        Dict with user_id and email
+        
+    Raises:
+        HTTPException: If token is invalid or expired
+    """
+    token = credentials.credentials
+    payload = decode_token(token)
+    
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    if payload.get("type") != "access":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    return {
+        "user_id": int(payload.get("sub")),
+        "email": payload.get("email")
+    }
