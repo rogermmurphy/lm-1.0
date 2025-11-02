@@ -33,7 +33,7 @@ api.interceptors.request.use(
     
     // Get token from localStorage
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('access_token');
+      const token = localStorage.getItem('accessToken');  // Fixed: was 'access_token'
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
         logger.debug('API Request', 'Added JWT token to request');
@@ -76,7 +76,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       
       if (typeof window !== 'undefined') {
-        const refreshToken = localStorage.getItem('refresh_token');
+        const refreshToken = localStorage.getItem('refreshToken');  // Fixed: was 'refresh_token'
         
         if (refreshToken) {
           try {
@@ -85,15 +85,15 @@ api.interceptors.response.use(
             });
             
             const { access_token } = response.data;
-            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('accessToken', access_token);  // Fixed: was 'access_token'
             
             // Retry original request with new token
             originalRequest.headers.Authorization = `Bearer ${access_token}`;
             return axios(originalRequest);
           } catch (refreshError) {
             // Refresh failed, clear tokens and redirect to login
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('accessToken');  // Fixed: was 'access_token'
+            localStorage.removeItem('refreshToken');  // Fixed: was 'refresh_token'
             localStorage.removeItem('user');
             if (typeof window !== 'undefined') {
               window.location.href = '/login';
