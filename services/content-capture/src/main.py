@@ -1,19 +1,22 @@
 """
-Class Management Service - Main Application
-FastAPI service for managing classes, assignments, and planner events
+Content Capture Service - Main Application
+FastAPI service for photo capture, textbook processing, and vector embeddings
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sys
 import os
 
-from .config import settings
-from .routes import classes_router, assignments_router
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
+from config import settings
+from routes import photos_router, textbooks_router
 
 # Create FastAPI app
 app = FastAPI(
-    title="Class Management Service",
-    description="API for managing classes, assignments, and schedules",
+    title="Content Capture Service",
+    description="API for photo capture, OCR, textbook processing, and vector embeddings",
     version="1.0.0"
 )
 
@@ -27,8 +30,8 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(classes_router, prefix="/api")
-app.include_router(assignments_router, prefix="/api")
+app.include_router(photos_router, prefix="/api")
+app.include_router(textbooks_router, prefix="/api")
 
 
 @app.get("/health")
@@ -45,13 +48,13 @@ async def health_check():
 async def root():
     """Root endpoint"""
     return {
-        "service": "Class Management Service",
+        "service": "Content Capture Service",
         "version": "1.0.0",
         "endpoints": {
             "health": "/health",
             "docs": "/docs",
-            "classes": "/api/classes",
-            "assignments": "/api/assignments"
+            "photos": "/api/photos",
+            "textbooks": "/api/textbooks"
         }
     }
 

@@ -245,6 +245,41 @@ services:
     networks:
       - lm-network
 
+  # Content Capture Service
+  content-capture-service:
+    build:
+      context: .
+      dockerfile: services/content-capture/Dockerfile
+    container_name: lm-content-capture
+    ports:
+      - "8008:8008"
+    volumes:
+      - ./services/content-capture/src:/app/src
+      - content-uploads:/app/uploads
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+      - REDIS_URL=redis://redis:6379/0
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - OCR_PROVIDER=tesseract
+      - VECTOR_DB_TYPE=chroma
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      chromadb:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - lm-network
+
   # API Gateway
   nginx:
     image: nginx:alpine
@@ -298,6 +333,8 @@ volumes:
     name: lm-qdrant-data
   ollama-data:
     name: lm-ollama-data
+  content-uploads:
+    name: lm-content-uploads
 
 networks:
   lm-network:

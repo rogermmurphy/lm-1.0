@@ -6,8 +6,8 @@ from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from models import Class, ClassCreate, ClassUpdate
-from config import settings
+from ..models import Class, ClassCreate, ClassUpdate
+from ..config import settings
 from lm_common.auth.jwt_utils import get_current_user
 
 router = APIRouter(prefix="/classes", tags=["classes"])

@@ -9,15 +9,16 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
-COPY requirements.txt .
+COPY services/class-management/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy shared library
-COPY ../../shared/python-common /app/shared/python-common
-RUN pip install -e /app/shared/python-common
+COPY shared/python-common /shared/python-common
+RUN pip install -e /shared/python-common
 
 # Copy application code
-COPY . .
+COPY services/class-management/src /app/src
+COPY services/class-management/src/config.py /app/src/config.py
 
 # Expose port
 EXPOSE 8005

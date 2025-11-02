@@ -7,8 +7,8 @@ from datetime import datetime
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from models import Assignment, AssignmentCreate, AssignmentUpdate
-from config import settings
+from ..models import Assignment, AssignmentCreate, AssignmentUpdate
+from ..config import settings
 from lm_common.auth.jwt_utils import get_current_user
 
 router = APIRouter(prefix="/assignments", tags=["assignments"])

@@ -1,0 +1,35 @@
+# Exclude large directories that shouldn't be in Docker build context
+old/
+poc/
+views/web-app/node_modules/
+views/web-app/.next/
+.git/
+qa/
+tests/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+docs/
+
+# Only include what's needed for the specific service being built
