@@ -14,7 +14,8 @@ from ..schemas import (
     ChatMessageResponse,
     ConversationResponse,
     StudyMaterialUploadRequest,
-    StudyMaterialResponse
+    StudyMaterialResponse,
+    MaterialsListResponse
 )
 from ..services import RAGService, LLMService
 
@@ -92,6 +93,9 @@ async def send_message(
             conversation_history=conversation_history
         )
     except Exception as e:
+        import traceback
+        print(f"Error generating response: {str(e)}")
+        print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate response: {str(e)}"
@@ -145,6 +149,34 @@ async def list_conversations(
             message_count=message_count,
             created_at=conv.created_at,
             updated_at=conv.updated_at
+        ))
+    
+    return result
+
+
+@router.get("/materials", response_model=list[MaterialsListResponse])
+async def list_materials(
+    db: Session = Depends(get_db)
+):
+    """
+    List user's study materials with content preview
+    """
+    # TODO: Filter by user_id from JWT token
+    materials = db.query(StudyMaterial).order_by(
+        StudyMaterial.created_at.desc()
+    ).limit(50).all()
+    
+    result = []
+    for material in materials:
+        # Create content preview (first 200 characters)
+        content_preview = material.content[:200] + "..." if len(material.content) > 200 else material.content
+        
+        result.append(MaterialsListResponse(
+            id=material.id,
+            title=material.title,
+            subject=material.subject,
+            content_preview=content_preview,
+            created_at=material.created_at
         ))
     
     return result

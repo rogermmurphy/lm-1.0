@@ -55,6 +55,18 @@ class StudyMaterialResponse(BaseModel):
         from_attributes = True
 
 
+class MaterialsListResponse(BaseModel):
+    """Materials list response with preview"""
+    id: int
+    title: str
+    subject: Optional[str]
+    content_preview: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
 class MessageResponse(BaseModel):
     """Generic message response"""
     message: str

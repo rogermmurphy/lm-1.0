@@ -54,9 +54,14 @@ async def health_check():
 async def startup_event():
     """Startup event handler"""
     logger.info(f"{settings.SERVICE_NAME} starting up...")
-    logger.info(f"Ollama: {settings.OLLAMA_URL}")
+    logger.info(f"LLM Provider: {settings.LLM_PROVIDER}")
+    if settings.LLM_PROVIDER.lower() == "bedrock":
+        logger.info(f"AWS Bedrock Model: {settings.BEDROCK_MODEL}")
+        logger.info(f"AWS Region: {settings.AWS_REGION}")
+    else:
+        logger.info(f"Ollama: {settings.OLLAMA_URL}")
+        logger.info(f"Ollama Model: {settings.OLLAMA_MODEL}")
     logger.info(f"ChromaDB: {settings.CHROMADB_HOST}:{settings.CHROMADB_PORT}")
-    logger.info(f"Model: {settings.OLLAMA_MODEL}")
 
 
 @app.on_event("shutdown")

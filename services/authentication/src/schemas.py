@@ -50,6 +50,15 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class AuthResponse(BaseModel):
+    """Authentication response with tokens and user data"""
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+    expires_in: int  # seconds
+    user: UserResponse
+
+
 class MessageResponse(BaseModel):
     """Generic message response"""
     message: str

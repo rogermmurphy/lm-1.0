@@ -1,19 +1,19 @@
 """
-LLM Agent Service - Bedrock Service
-AWS Bedrock integration for fast LLM responses
-Ported from POC 07 - Tested and Validated with Claude 3 Sonnet
+LLM Agent Service - AWS Bedrock Service
+Fast cloud LLM alternative for testing
+Uses Claude 3.5 Sonnet with Converse API for <10 second responses
 """
 import boto3
-import json
-from typing import List, Dict, Optional
+from typing import Optional, List, Dict
+
 from ..config import settings
 
 
 class BedrockService:
-    """Service for interacting with AWS Bedrock (Claude)"""
+    """AWS Bedrock service for fast LLM responses"""
     
     def __init__(self):
-        """Initialize Bedrock service"""
+        """Initialize Bedrock client"""
         self.client = boto3.client(
             service_name='bedrock-runtime',
             region_name=settings.AWS_REGION,
@@ -29,39 +29,42 @@ class BedrockService:
         max_tokens: Optional[int] = None
     ) -> str:
         """
-        Generate response from Bedrock Claude
+        Generate text using Bedrock Converse API
         
         Args:
             prompt: Input prompt
             temperature: Sampling temperature (0-1)
-            max_tokens: Maximum tokens to generate (default: 2048)
+            max_tokens: Maximum tokens to generate
             
         Returns:
-            Generated text response
+            Generated text
         """
         try:
-            # Format prompt for Claude
-            formatted_prompt = f"\n\nHuman: {prompt}\n\nAssistant:"
+            # Use Converse API for Claude 3.5
+            messages = [
+                {
+                    "role": "user",
+                    "content": [{"text": prompt}]
+                }
+            ]
             
-            # Prepare request body
-            body = {
-                "prompt": formatted_prompt,
+            # Prepare inference config
+            inference_config = {
                 "temperature": temperature,
-                "max_tokens_to_sample": max_tokens or 2048,
-                "top_p": 0.9
+                "maxTokens": max_tokens or 2048,
+                "topP": 0.9
             }
             
-            # Call Bedrock API
-            response = self.client.invoke_model(
+            # Invoke model using Converse API
+            response = self.client.converse(
                 modelId=self.model_id,
-                body=json.dumps(body),
-                contentType='application/json',
-                accept='application/json'
+                messages=messages,
+                inferenceConfig=inference_config
             )
             
             # Parse response
-            response_body = json.loads(response['body'].read())
-            return response_body.get('completion', '').strip()
+            output_message = response['output']['message']
+            return output_message['content'][0]['text'].strip()
             
         except Exception as e:
             raise Exception(f"Bedrock generation failed: {e}")

@@ -54,7 +54,7 @@ class RAGService:
                 return {"documents": [[]], "metadatas": [[]], "distances": [[]]}
             
             coll_name = collection_name or self.collection_name
-            collection = client.get_collection(coll_name)
+            collection = client.get_or_create_collection(coll_name)
             
             results = collection.query(
                 query_texts=[query],

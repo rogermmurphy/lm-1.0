@@ -1,5 +1,4 @@
 # Text-to-Speech Service Dependencies
-# From POC 11
 
 # FastAPI
 fastapi==0.104.1
@@ -11,8 +10,8 @@ pydantic-settings==2.1.0
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
 
-# Azure TTS
-azure-cognitiveservices-speech==1.34.0
+# HTTP requests for Azure REST API
+requests>=2.31.0
 
 # Environment
 python-dotenv==1.0.0

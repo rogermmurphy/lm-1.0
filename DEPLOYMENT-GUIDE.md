@@ -2,17 +2,198 @@
 
 ## Complete Deployment Instructions
 
+**Current Status**: System fully operational with Docker Compose deployment
+
 ---
 
 ## Prerequisites
 
-### Infrastructure Required
-- PostgreSQL 13+ (localhost:5432)
-- Redis 6+ (localhost:6379)
-- Ollama with llama3.2:3b model (localhost:11434)
-- ChromaDB (localhost:8000)
-- Python 3.10+
-- Node.js 18+
+### Required Software
+- Docker Desktop or Docker Engine 20+
+- Docker Compose V2
+- Node.js 18+ (for web app development)
+- Git
+## Step 1: Deploy Database
+
+```bash
+cd database/scripts
+python deploy-schema.py
+```
+
+**Expected Output:**
+```
+[OK] Database 'littlemonster' created
+[OK] Schema deployed successfully
+[OK] Tables created: 12
+[SUCCESS] Database ready!
+```
+
+---
+
+## Step 2: Install Shared Library
+
+```bash
+cd shared/python-common
+pip install -e .
+```
+
+**Verify:**
+```bash
+python -c "from lm_common.auth import jwt_utils; print('lm-common OK')"
+```
+
+---
+
+## Step 3: Deploy Backend Services
+
+### 3.1 Authentication Service (Port 8001)
+```bash
+cd services/authentication
+pip install -r requirements.txt
+python test_service.py  # Verify imports
+python -m uvicorn src.main:app --reload --port 8001
+```
+
+**Test:**
+```bash
+curl http://localhost:8001/health
+curl http://localhost:8001/docs  # OpenAPI docs
+```
+
+### 3.2 LLM Agent Service (Port 8005)
+```bash
+cd services/llm-agent
+pip install -r requirements.txt
+python test_service.py  # Verify imports
+python -m uvicorn src.main:app --reload --port 8005
+```
+
+### 3.3 Speech-to-Text Service (Port 8002)
+```bash
+cd services/speech-to-text
+pip install -r requirements.txt
+python test_service.py  # Verify imports
+python -m uvicorn src.main:app --reload --port 8002
+```
+
+### 3.4 Text-to-Speech Service (Port 8003)
+```bash
+cd services/text-to-speech
+pip install -r requirements.txt
+python test_service.py  # Verify imports
+python -m uvicorn src.main:app --reload --port 8003
+```
+
+### 3.5 Audio Recording Service (Port 8004)
+```bash
+cd services/audio-recording
+pip install -r requirements.txt
+python -m uvicorn src.main:app --reload --port 8004
+```
+
+### 3.6 Async Jobs Worker
+```bash
+cd services/async-jobs
+pip install -r requirements.txt
+python src/worker.py
+```
+
+---
+
+## Step 4: Deploy Frontend
+
+```bash
+cd views/web-app
+npm install  # Already done if 86 TS errors fixed
+npm run dev
+```
+
+**Access:** http://localhost:3000
+
+---
+
+## Step 5: Deploy API Gateway (Optional)
+
+```bash
+# Install nginx if not installed
+# Copy config
+nginx -c $(pwd)/services/api-gateway/nginx.conf -t  # Test config
+nginx -c $(pwd)/services/api-gateway/nginx.conf     # Start
+```
+
+**Access:** http://localhost (routes to all services)
+## Step 1: Start All Services with Docker Compose
+
+```bash
+# Start all infrastructure and services
+docker-compose up -d
+
+# Check status
+docker-compose ps
+
+# View logs
+docker-compose logs -f
+```
+
+**Services Started:**
+- PostgreSQL (port 5432)
+- Redis (port 6379)
+- ChromaDB (port 8000)
+- Ollama (port 11434)
+- Nginx API Gateway (port 80)
+- Auth Service (port 8001)
+- LLM Agent (port 8005)
+- STT Service (port 8002)
+- TTS Service (port 8003)
+- Recording Service (port 8004)
+- Jobs Worker (background)
+- Adminer (port 8080 - DB admin UI)
+
+---
+
+## Step 2: Deploy Database Schema
+
+```bash
+# Wait for PostgreSQL to be ready
+docker-compose logs postgres | grep "ready to accept"
+
+# Deploy schema
+python database/scripts/deploy-schema.py
+```
+
+---
+
+## Step 3: Start Web Application
+
+```bash
+cd views/web-app
+npm install
+npm run dev
+```
+
+**Access:** http://localhost:3000
+
+---
+
+## Step 4: Verify Deployment
+
+### Health Checks
+```bash
+curl http://localhost/health              # Gateway
+curl http://localhost/api/auth/health     # Auth
+curl http://localhost/api/chat/health     # LLM
+curl http://localhost/api/tts/health      # TTS
+```
+
+### Test Login
+1. Open http://localhost:3000
+2. Login: testuser@example.com / password123
+3. Verify dashboard loads
+
+### Test Features
+1. Navigate to Materials page - should show test material
+2. Navigate to TTS page - generate audio
+3. Navigate to Chat page - ask AI a question
 
 ### Verify Prerequisites
 ```bash
@@ -170,22 +351,30 @@ locust -f tests/performance/locustfile.py
 
 ---
 
-## Production Deployment (Docker)
+## Docker Management
 
-### Build All Images
+### Rebuild After Code Changes
 ```bash
-cd services/authentication && docker build -t lm-auth:1.0 .
-cd services/llm-agent && docker build -t lm-llm:1.0 .
-cd services/speech-to-text && docker build -t lm-stt:1.0 .
-cd services/text-to-speech && docker build -t lm-tts:1.0 .
-cd services/audio-recording && docker build -t lm-recording:1.0 .
-cd services/async-jobs && docker build -t lm-jobs:1.0 .
-cd views/web-app && docker build -t lm-web:1.0 .
+# Rebuild specific service
+docker-compose up -d --build tts-service
+
+# Rebuild all services
+docker-compose up -d --build
+
+# Restart services
+docker-compose restart llm-service tts-service
 ```
 
-### Run with Docker Compose (Future)
+### Volume Mounts for Development
+Hot-reload enabled for these services (no rebuild needed):
+- `llm-service`: `./services/llm-agent/src` → `/app/src`
+- `tts-service`: `./services/text-to-speech/src` → `/app/src`
+
+### Clear Python Cache (if needed)
 ```bash
-docker-compose up -d
+docker exec lm-llm rm -rf /app/src/**/__pycache__
+docker exec lm-tts rm -rf /app/src/**/__pycache__
+docker-compose restart llm-service tts-service
 ```
 
 ---

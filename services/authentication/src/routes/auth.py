@@ -18,6 +18,7 @@ from ..schemas import (
     TokenRefreshRequest,
     TokenResponse,
     UserResponse,
+    AuthResponse,
     MessageResponse
 )
 from ..config import settings
@@ -25,13 +26,13 @@ from ..config import settings
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
 async def register(
     request: UserRegisterRequest,
     db: Session = Depends(get_db)
 ):
     """
-    Register a new user
+    Register a new user and return tokens
     
     - **email**: User email address
     - **password**: User password (min 8 characters, must meet strength requirements)
@@ -86,16 +87,49 @@ async def register(
     db.commit()
     db.refresh(new_user)
     
-    return new_user
+    # Generate tokens immediately after registration
+    access_token = jwt_utils.create_access_token(
+        user_id=new_user.id,
+        email=new_user.email,
+        secret_key=settings.JWT_SECRET_KEY,
+        expires_minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    
+    refresh_token = jwt_utils.create_refresh_token(
+        user_id=new_user.id,
+        secret_key=settings.JWT_SECRET_KEY,
+        expires_days=settings.REFRESH_TOKEN_EXPIRE_DAYS
+    )
+    
+    # Store refresh token in database
+    token_hash = hashlib.sha256(refresh_token.encode()).hexdigest()
+    expires_at = datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+    
+    db_refresh_token = RefreshToken(
+        user_id=new_user.id,
+        token_hash=token_hash,
+        expires_at=expires_at
+    )
+    db.add(db_refresh_token)
+    db.commit()
+    
+    # Return tokens and user data
+    return AuthResponse(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer",
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        user=UserResponse.model_validate(new_user)
+    )
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=AuthResponse)
 async def login(
     request: UserLoginRequest,
     db: Session = Depends(get_db)
 ):
     """
-    Login and receive JWT tokens
+    Login and receive JWT tokens with user data
     
     - **email**: User email
     - **password**: User password
@@ -152,11 +186,12 @@ async def login(
     
     db.commit()
     
-    return TokenResponse(
+    return AuthResponse(
         access_token=access_token,
         refresh_token=refresh_token,
         token_type="bearer",
-        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        user=UserResponse.model_validate(user)
     )
 
 

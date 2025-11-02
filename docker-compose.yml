@@ -128,12 +128,19 @@ services:
     container_name: lm-llm
     ports:
       - "8005:8000"
+    volumes:
+      - ./services/llm-agent/src:/app/src
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
       - REDIS_URL=redis://redis:6379/0
       - OLLAMA_URL=http://ollama:11434
       - CHROMADB_HOST=chromadb
       - CHROMADB_PORT=8000
+      - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
+      - BEDROCK_MODEL=${BEDROCK_MODEL:-anthropic.claude-3-sonnet-20240229-v1:0}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     depends_on:
       - postgres
       - redis
@@ -169,6 +176,8 @@ services:
     container_name: lm-tts
     ports:
       - "8003:8000"
+    volumes:
+      - ./services/text-to-speech/src:/app/src
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
       - AZURE_SPEECH_KEY=${AZURE_SPEECH_KEY}
