@@ -13,7 +13,7 @@ class Conversation(Base):
     __tablename__ = 'conversations'
     
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    user_id = Column(Integer, nullable=False, index=True)  # FK constraint exists at DB level
     title = Column(String(500))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -47,7 +47,7 @@ class StudyMaterial(Base):
     __tablename__ = 'study_materials'
     
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    user_id = Column(Integer, nullable=False, index=True)  # FK constraint exists at DB level
     title = Column(String(500), nullable=False)
     content = Column(Text)
     file_path = Column(String(500))

@@ -43,7 +43,7 @@ try:
     print("[OK] Connected to littlemonster database")
     
     # Read and execute schema
-    with open('../../database/schemas/master-schema.sql', 'r') as f:
+    with open('database/schemas/master-schema.sql', 'r') as f:
         schema_sql = f.read()
     
     cursor = conn.cursor()
