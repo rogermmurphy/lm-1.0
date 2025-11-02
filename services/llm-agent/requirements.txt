@@ -1,0 +1,32 @@
+# LLM Agent Service Dependencies
+# Extracted from POC 07 and POC 00 requirements
+
+# FastAPI and server (all compatible with pydantic 2.12+)
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+pydantic>=2.12.3
+pydantic-settings>=2.6.0
+
+# Database
+sqlalchemy>=2.0.23
+psycopg2-binary>=2.9.9
+
+# Redis
+redis>=5.0.1
+
+# LangChain for agent orchestration (compatible versions)
+langchain>=0.3.10
+langchain-community>=0.3.10
+langchain-ollama>=0.3.10
+
+# Vector Database (ChromaDB)
+chromadb>=0.4.18
+
+# HTTP requests
+requests>=2.31.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# Shared library (local install)
+# Install with: pip install -e ../../shared/python-common

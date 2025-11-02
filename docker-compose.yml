@@ -1,0 +1,272 @@
+# Little Monster - Complete Docker Compose Configuration
+# Includes ALL infrastructure + 6 microservices + gateway
+
+services:
+  # ============================================================================
+  # INFRASTRUCTURE (from old/Ella-Ai/docker-compose.yml)
+  # ============================================================================
+  
+  # Redis for caching and job queues
+  redis:
+    image: redis:7-alpine
+    container_name: lm-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: lm-postgres
+    environment:
+      POSTGRES_DB: littlemonster
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/schemas/master-schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    restart: unless-stopped
+    networks:
+      - lm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Adminer - Database management UI
+  adminer:
+    image: adminer:latest
+    container_name: lm-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - lm-network
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+
+  # ChromaDB - Vector database for RAG
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: lm-chroma
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Qdrant - Alternative vector database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: lm-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Ollama - Local LLM
+  ollama:
+    image: ollama/ollama:latest
+    container_name: lm-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # ============================================================================
+  # LITTLE MONSTER MICROSERVICES
+  # ============================================================================
+
+  # Authentication Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: services/authentication/Dockerfile
+    container_name: lm-auth
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # LLM Agent Service
+  llm-service:
+    build:
+      context: .
+      dockerfile: services/llm-agent/Dockerfile
+    container_name: lm-llm
+    ports:
+      - "8005:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - REDIS_URL=redis://redis:6379/0
+      - OLLAMA_URL=http://ollama:11434
+      - CHROMADB_HOST=chromadb
+      - CHROMADB_PORT=8000
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+      - chromadb
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Speech-to-Text Service
+  stt-service:
+    build:
+      context: .
+      dockerfile: services/speech-to-text/Dockerfile
+    container_name: lm-stt
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Text-to-Speech Service
+  tts-service:
+    build:
+      context: .
+      dockerfile: services/text-to-speech/Dockerfile
+    container_name: lm-tts
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - AZURE_SPEECH_KEY=${AZURE_SPEECH_KEY}
+      - AZURE_SPEECH_REGION=eastus
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Audio Recording Service
+  recording-service:
+    build:
+      context: .
+      dockerfile: services/audio-recording/Dockerfile
+    container_name: lm-recording
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Async Jobs Worker
+  jobs-worker:
+    build:
+      context: .
+      dockerfile: services/async-jobs/Dockerfile
+    container_name: lm-jobs
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - lm-network
+    command: python src/worker.py
+
+  # API Gateway
+  nginx:
+    image: nginx:alpine
+    container_name: lm-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./services/api-gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - auth-service
+      - llm-service
+      - stt-service
+      - tts-service
+      - recording-service
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # ============================================================================
+  # OPTIONAL SERVICES
+  # ============================================================================
+
+  # Presenton - PowerPoint generation
+  presenton:
+    image: ghcr.io/presenton/presenton:latest
+    container_name: lm-presenton
+    ports:
+      - "5000:80"
+    environment:
+      - LLM=ollama
+      - OLLAMA_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3.2:3b
+      - IMAGE_PROVIDER=pexels
+      - PEXELS_API_KEY=mcqPLzfW53QOcGe6H2wD2JDhLtfNbVclS0wX4Zk3OGrM6Op9XftrhxK3
+      - CAN_CHANGE_KEYS=true
+      - DISABLE_ANONYMOUS_TELEMETRY=true
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+volumes:
+  redis-data:
+    name: lm-redis-data
+  postgres-data:
+    name: lm-postgres-data
+  chroma-data:
+    name: lm-chroma-data
+  qdrant-data:
+    name: lm-qdrant-data
+  ollama-data:
+    name: lm-ollama-data
+
+networks:
+  lm-network:
+    name: lm-network
+    driver: bridge

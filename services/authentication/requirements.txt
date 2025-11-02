@@ -1,0 +1,31 @@
+# Authentication Service Dependencies
+# Extracted from POC 12 requirements
+
+# FastAPI and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# Authentication
+PyJWT==2.8.0
+bcrypt==4.2.1
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Redis
+redis==5.0.1
+
+# Email validation
+email-validator==2.1.0
+
+# Environment
+python-dotenv==1.0.0
+
+# Shared library (local install)
+# Install with: pip install -e ../../shared/python-common
