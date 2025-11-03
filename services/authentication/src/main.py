@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from lm_common.logging import setup_logging, get_logger
 
 from .config import settings
-from .routes import auth
+from .routes import auth, sessions
 
 # Setup logging
 setup_logging(service_name=settings.SERVICE_NAME, level=settings.LOG_LEVEL)
@@ -35,6 +35,7 @@ app = FastAPI(
 
 # Include routers
 app.include_router(auth.router)
+app.include_router(sessions.router)
 
 
 @app.get("/health")

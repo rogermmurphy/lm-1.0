@@ -22,8 +22,12 @@ from ..schemas import (
     MessageResponse
 )
 from ..config import settings
+from ..services.session_manager import get_session_manager
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
+
+# Get session manager
+session_manager = get_session_manager()
 
 
 @router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
@@ -185,6 +189,22 @@ async def login(
     user.last_login = datetime.utcnow()
     
     db.commit()
+    
+    # Create session in Redis
+    try:
+        device_info = {
+            'user_agent': 'web',  # TODO: Extract from request headers
+            'ip_address': 'unknown'  # TODO: Extract from request
+        }
+        session_id = session_manager.create_session(
+            user_id=user.id,
+            access_token=access_token,
+            refresh_token=refresh_token,
+            device_info=device_info
+        )
+    except Exception as e:
+        print(f"Failed to create session: {e}")
+        # Continue even if session creation fails
     
     return AuthResponse(
         access_token=access_token,

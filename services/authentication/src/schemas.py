@@ -64,6 +64,16 @@ class MessageResponse(BaseModel):
     message: str
 
 
+class SessionResponse(BaseModel):
+    """Session information response"""
+    session_id: str
+    user_id: int
+    created_at: str
+    expires_at: str
+    last_activity: str
+    device_info: dict = {}
+
+
 class ErrorResponse(BaseModel):
     """Error response"""
     detail: str
