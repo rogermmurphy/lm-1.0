@@ -22,6 +22,9 @@ langchain-ollama>=0.3.10
 # Vector Database (ChromaDB)
 chromadb>=0.4.18
 
+# Wikipedia API for educational content
+wikipedia-api>=0.6.0
+
 # HTTP requests
 requests>=2.31.0
 
