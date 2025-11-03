@@ -355,6 +355,54 @@ services:
     networks:
       - lm-network
 
+  # Study Analytics Service
+  study-analytics-service:
+    build:
+      context: .
+      dockerfile: services/study-analytics/Dockerfile
+    container_name: lm-analytics
+    ports:
+      - "8012:8012"
+    volumes:
+      - ./services/study-analytics/src:/app/src
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Notifications Service
+  notifications-service:
+    build:
+      context: .
+      dockerfile: services/notifications/Dockerfile
+    container_name: lm-notifications
+    ports:
+      - "8013:8013"
+    volumes:
+      - ./services/notifications/src:/app/src
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lm-network
+
   # Web Application (Frontend)
   web-app:
     build:

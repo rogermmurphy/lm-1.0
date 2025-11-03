@@ -8,11 +8,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
-COPY requirements.txt .
+COPY services/notifications/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install shared library
+COPY shared/python-common /tmp/lm-common
+RUN pip install --no-cache-dir /tmp/lm-common && rm -rf /tmp/lm-common
+
 # Copy application code
-COPY . .
+COPY services/notifications/src ./src
 
 # Expose port
 EXPOSE 8013
