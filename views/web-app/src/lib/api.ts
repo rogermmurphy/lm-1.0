@@ -159,4 +159,67 @@ export const tts = {
     api.post('/api/tts/generate', { text, voice }),
 };
 
+// Notifications API
+export const notifications = {
+  // Get all notifications with optional filters
+  getAll: (params?: { type?: string; read?: boolean; limit?: number; offset?: number }) =>
+    api.get('/api/notifications', { params }),
+  
+  // Mark notification as read
+  markRead: (notificationId: number) =>
+    api.post('/api/notifications/mark-read', { notification_id: notificationId }),
+  
+  // Mark all notifications as read
+  markAllRead: () =>
+    api.post('/api/notifications/mark-all-read'),
+  
+  // Delete notification
+  delete: (notificationId: number) =>
+    api.delete(`/api/notifications/${notificationId}`),
+  
+  // Get unread count
+  getUnreadCount: () =>
+    api.get('/api/notifications/unread-count'),
+  
+  // Get notification preferences
+  getPreferences: () =>
+    api.get('/api/notifications/preferences'),
+  
+  // Update notification preferences
+  updatePreferences: (preferences: {
+    email_enabled?: boolean;
+    push_enabled?: boolean;
+    assignment_notifications?: boolean;
+    grade_notifications?: boolean;
+    message_notifications?: boolean;
+    achievement_notifications?: boolean;
+    friend_request_notifications?: boolean;
+    study_reminder_notifications?: boolean;
+  }) =>
+    api.put('/api/notifications/preferences', preferences),
+};
+
+// Messages API
+export const messages = {
+  // Send a message
+  send: (recipientId: number, content: string, subject?: string) =>
+    api.post('/api/messages/send', { recipient_id: recipientId, content, subject }),
+  
+  // Get all conversations
+  getConversations: () =>
+    api.get('/api/messages/conversations'),
+  
+  // Get conversation with specific user
+  getConversation: (userId: number) =>
+    api.get(`/api/messages/conversation/${userId}`),
+  
+  // Mark messages as read
+  markRead: (messageIds: number[]) =>
+    api.post('/api/messages/mark-read', { message_ids: messageIds }),
+  
+  // Delete message
+  delete: (messageId: number) =>
+    api.delete(`/api/messages/${messageId}`),
+};
+
 export default api;

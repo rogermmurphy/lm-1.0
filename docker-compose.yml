@@ -280,6 +280,81 @@ services:
     networks:
       - lm-network
 
+  # AI Study Tools Service
+  ai-study-tools-service:
+    build:
+      context: .
+      dockerfile: services/ai-study-tools/Dockerfile
+    container_name: lm-ai-study-tools
+    ports:
+      - "8009:8009"
+    volumes:
+      - ./services/ai-study-tools/src:/app/src
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Social & Collaboration Service
+  social-collaboration-service:
+    build:
+      context: .
+      dockerfile: services/social-collaboration/Dockerfile
+    container_name: lm-social-collab
+    ports:
+      - "8010:8010"
+    volumes:
+      - ./services/social-collaboration/src:/app/src
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lm-network
+
+  # Gamification Service
+  gamification-service:
+    build:
+      context: .
+      dockerfile: services/gamification/Dockerfile
+    container_name: lm-gamification
+    ports:
+      - "8011:8011"
+    volumes:
+      - ./services/gamification/src:/app/src
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=littlemonster
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lm-network
+
   # API Gateway
   nginx:
     image: nginx:alpine

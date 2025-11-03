@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import NotificationBell from './NotificationBell';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -18,6 +19,10 @@ export default function Navigation() {
     { href: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { href: '/dashboard/classes', label: 'Classes', icon: '📖' },
     { href: '/dashboard/assignments', label: 'Assignments', icon: '📝' },
+    { href: '/dashboard/flashcards', label: 'Flashcards', icon: '🎴' },
+    { href: '/dashboard/groups', label: 'Study Groups', icon: '👥' },
+    { href: '/dashboard/messages', label: 'Messages', icon: '✉️' },
+    { href: '/dashboard/notifications', label: 'Notifications', icon: '🔔' },
     { href: '/dashboard/chat', label: 'AI Chat', icon: '💬' },
     { href: '/dashboard/transcribe', label: 'Transcribe', icon: '🎤' },
     { href: '/dashboard/tts', label: 'Text-to-Speech', icon: '🔊' },
@@ -52,6 +57,7 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
+            <NotificationBell />
             <div className="text-sm text-gray-700">
               {user?.username || user?.email}
             </div>

@@ -38,7 +38,7 @@ export default function ClassesPage() {
   const fetchClasses = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8007/api/classes', {
+      const response = await fetch('http://localhost:8006/api/classes', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -58,7 +58,7 @@ export default function ClassesPage() {
   const createClass = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8007/api/classes', {
+      const response = await fetch('http://localhost:8006/api/classes', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -90,7 +90,7 @@ export default function ClassesPage() {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8007/api/classes/${id}`, {
+      const response = await fetch(`http://localhost:8006/api/classes/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
