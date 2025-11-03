@@ -1,0 +1,81 @@
+# Render.com Deployment Configuration for Little Monster
+# This file configures automatic deployment of your entire stack
+
+services:
+  # Web Application (Frontend)
+  - type: web
+    name: lm-webapp
+    env: docker
+    dockerfilePath: ./views/web-app/Dockerfile
+    dockerContext: ./views/web-app
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://lm-api-gateway.onrender.com
+    healthCheckPath: /
+
+  # API Gateway (Nginx)
+  - type: web
+    name: lm-api-gateway
+    env: docker
+    dockerfilePath: ./services/api-gateway/Dockerfile  
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # Authentication Service
+  - type: web
+    name: lm-auth
+    env: docker
+    dockerfilePath: ./services/authentication/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lm-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: lm-redis
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+  # LLM Agent Service
+  - type: web
+    name: lm-llm
+    env: docker
+    dockerfilePath: ./services/llm-agent/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lm-postgres
+          property: connectionString
+      - key: LLM_PROVIDER
+        value: bedrock
+      - key: BEDROCK_MODEL
+        value: anthropic.claude-3-sonnet-20240229-v1:0
+      - key: AWS_REGION
+        value: us-east-1
+      - key: AWS_ACCESS_KEY_ID
+        sync: false  # You'll need to add this manually
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false  # You'll need to add this manually
+
+databases:
+  - name: lm-postgres
+    databaseName: littlemonster
+    user: lm_user
+    plan: free
+
+# Redis is not available on free tier, you'll need to use external service
+# Recommended: Redis Cloud (free tier available)
+# Or upgrade Render plan

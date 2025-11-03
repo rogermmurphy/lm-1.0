@@ -16,7 +16,7 @@ export default function LogsPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const loadLogs() => {
+  const loadLogs = () => {
     const allLogs = logger.getLogs();
     setLogs(allLogs);
     setSummary(logger.getSummary());

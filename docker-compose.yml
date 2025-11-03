@@ -355,6 +355,23 @@ services:
     networks:
       - lm-network
 
+  # Web Application (Frontend)
+  web-app:
+    build:
+      context: ./views/web-app
+      dockerfile: Dockerfile
+    container_name: lm-web-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost
+      - NODE_ENV=production
+    depends_on:
+      - nginx
+    restart: unless-stopped
+    networks:
+      - lm-network
+
   # API Gateway
   nginx:
     image: nginx:alpine
