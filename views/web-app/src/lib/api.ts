@@ -131,6 +131,15 @@ export const chat = {
   getConversations: () =>
     api.get('/api/chat/conversations'),
   
+  createConversation: (title?: string, userId: number = 1) =>
+    api.post('/api/chat/conversations', { title, user_id: userId }),
+  
+  updateConversation: (conversationId: number, title: string) =>
+    api.put(`/api/chat/conversations/${conversationId}`, { title }),
+  
+  deleteConversation: (conversationId: number) =>
+    api.delete(`/api/chat/conversations/${conversationId}`),
+  
   uploadMaterial: (title: string, content: string, subject?: string) =>
     api.post('/api/chat/materials', { title, content, subject }),
 };

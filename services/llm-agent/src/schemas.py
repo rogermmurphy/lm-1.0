@@ -22,6 +22,17 @@ class StudyMaterialUploadRequest(BaseModel):
     subject: Optional[str] = Field(None, max_length=100)
 
 
+class ConversationCreateRequest(BaseModel):
+    """Create new conversation request"""
+    title: Optional[str] = Field(None, max_length=500)
+    user_id: int = Field(gt=0)
+
+
+class ConversationUpdateRequest(BaseModel):
+    """Update conversation request"""
+    title: str = Field(min_length=1, max_length=500)
+
+
 # Response Schemas
 class ChatMessageResponse(BaseModel):
     """Chat message response"""

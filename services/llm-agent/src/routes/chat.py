@@ -13,9 +13,12 @@ from ..schemas import (
     ChatMessageRequest,
     ChatMessageResponse,
     ConversationResponse,
+    ConversationCreateRequest,
+    ConversationUpdateRequest,
     StudyMaterialUploadRequest,
     StudyMaterialResponse,
-    MaterialsListResponse
+    MaterialsListResponse,
+    MessageResponse
 )
 from ..services import RAGService, LLMService
 
@@ -152,6 +155,101 @@ async def list_conversations(
         ))
     
     return result
+
+
+@router.post("/conversations", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
+async def create_conversation(
+    request: ConversationCreateRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Create a new conversation
+    
+    - **title**: Optional conversation title
+    - **user_id**: User ID (TODO: Get from JWT token)
+    """
+    conversation = Conversation(
+        user_id=request.user_id,
+        title=request.title or "New Conversation"
+    )
+    db.add(conversation)
+    db.commit()
+    db.refresh(conversation)
+    
+    return ConversationResponse(
+        id=conversation.id,
+        title=conversation.title,
+        message_count=0,
+        created_at=conversation.created_at,
+        updated_at=conversation.updated_at
+    )
+
+
+@router.put("/conversations/{conversation_id}", response_model=ConversationResponse)
+async def update_conversation(
+    conversation_id: int,
+    request: ConversationUpdateRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Update conversation title
+    
+    - **conversation_id**: Conversation ID
+    - **title**: New conversation title
+    """
+    conversation = db.query(Conversation).filter(
+        Conversation.id == conversation_id
+    ).first()
+    
+    if not conversation:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Conversation not found"
+        )
+    
+    conversation.title = request.title
+    conversation.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(conversation)
+    
+    message_count = db.query(Message).filter(
+        Message.conversation_id == conversation.id
+    ).count()
+    
+    return ConversationResponse(
+        id=conversation.id,
+        title=conversation.title,
+        message_count=message_count,
+        created_at=conversation.created_at,
+        updated_at=conversation.updated_at
+    )
+
+
+@router.delete("/conversations/{conversation_id}", response_model=MessageResponse)
+async def delete_conversation(
+    conversation_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Delete a conversation and all its messages
+    
+    - **conversation_id**: Conversation ID to delete
+    """
+    conversation = db.query(Conversation).filter(
+        Conversation.id == conversation_id
+    ).first()
+    
+    if not conversation:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Conversation not found"
+        )
+    
+    # Delete conversation (messages cascade automatically)
+    db.delete(conversation)
+    db.commit()
+    
+    return MessageResponse(message="Conversation deleted successfully")
 
 
 @router.get("/materials", response_model=list[MaterialsListResponse])

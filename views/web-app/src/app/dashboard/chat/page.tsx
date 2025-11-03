@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { chat } from '@/lib/api';
+import ConversationList from '@/components/ConversationList';
 
 interface Message {
   id: string;
@@ -15,6 +16,7 @@ export default function ChatPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [currentConversationId, setCurrentConversationId] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -42,7 +44,13 @@ export default function ChatPage() {
     setError('');
 
     try {
-      const response = await chat.sendMessage(input);
+      // Send message with current conversation ID (creates new if null)
+      const response = await chat.sendMessage(input, currentConversationId ?? undefined);
+      
+      // Update conversation ID if this was a new conversation
+      if (!currentConversationId && response.data.conversation_id) {
+        setCurrentConversationId(response.data.conversation_id);
+      }
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -63,25 +71,49 @@ export default function ChatPage() {
   const handleNewConversation = () => {
     setMessages([]);
     setError('');
+    setCurrentConversationId(null);
+  };
+
+  const handleSelectConversation = (conversationId: number) => {
+    // When switching conversations, clear current messages
+    // In a full implementation, you'd load the conversation history from the API
+    setMessages([]);
+    setError('');
+    setCurrentConversationId(conversationId);
+    
+    // TODO: Load conversation history from API
+    // This would require adding a new endpoint: GET /chat/conversations/{id}/messages
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg h-[calc(100vh-12rem)] flex flex-col">
+    <div className="h-[calc(100vh-4rem)] flex">
+      {/* Conversation List Sidebar */}
+      <ConversationList
+        selectedConversationId={currentConversationId}
+        onSelectConversation={handleSelectConversation}
+        onNewConversation={handleNewConversation}
+      />
+
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col bg-white">
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">AI Tutor Chat</h1>
             <p className="text-sm text-gray-600">
-              Ask me anything about your studies
+              {currentConversationId 
+                ? `Conversation #${currentConversationId}` 
+                : 'Start a new conversation'}
             </p>
           </div>
-          <button
-            onClick={handleNewConversation}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
-          >
-            ✨ New Chat
-          </button>
+          {currentConversationId && (
+            <button
+              onClick={handleNewConversation}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+            >
+              ✨ New Chat
+            </button>
+          )}
         </div>
 
         {/* Messages */}
@@ -98,7 +130,7 @@ export default function ChatPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
                 <button
                   onClick={() => setInput('Explain quantum physics in simple terms')}
-                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
                 >
                   <span className="font-medium">Explain quantum physics</span>
                   <br />
@@ -106,7 +138,7 @@ export default function ChatPage() {
                 </button>
                 <button
                   onClick={() => setInput('Help me understand calculus derivatives')}
-                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
                 >
                   <span className="font-medium">Help with calculus</span>
                   <br />
@@ -114,7 +146,7 @@ export default function ChatPage() {
                 </button>
                 <button
                   onClick={() => setInput('What are the main causes of World War II?')}
-                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
                 >
                   <span className="font-medium">World War II causes</span>
                   <br />
@@ -122,7 +154,7 @@ export default function ChatPage() {
                 </button>
                 <button
                   onClick={() => setInput('Explain photosynthesis step by step')}
-                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm"
+                  className="p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg text-sm transition-colors"
                 >
                   <span className="font-medium">Photosynthesis process</span>
                   <br />
@@ -197,7 +229,7 @@ export default function ChatPage() {
             </button>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            💡 The AI tutor is powered by a local LLM running on your machine
+            💡 Powered by AWS Bedrock Claude 3 Sonnet with RAG-enhanced responses
           </p>
         </form>
       </div>
