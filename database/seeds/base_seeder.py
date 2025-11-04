@@ -23,12 +23,13 @@ except ImportError:
     def get_db_connection():
         """Get database connection from environment variables"""
         return psycopg2.connect(
-            host=os.getenv('DB_HOST', 'aws-0-us-east-1.pooler.supabase.com'),
-            port=int(os.getenv('DB_PORT', 6543)),
-            database=os.getenv('DB_NAME', 'postgres'),
-            user=os.getenv('DB_USER', 'postgres.ynrfvvqxqxqxqxqx'),
-            password=os.getenv('DB_PASSWORD'),
-            sslmode='require'
+            # FIXED: Use local Docker PostgreSQL, NOT Supabase!
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', '5432')),
+            database=os.getenv('DB_NAME', 'littlemonster'),
+            user=os.getenv('DB_USER', 'postgres'),
+            password=os.getenv('DB_PASSWORD', 'postgres')
+            # NO sslmode for local PostgreSQL
         )
     
     def hash_password(password: str) -> str:

@@ -52,31 +52,34 @@ export default function StudyGroupsPage() {
 
   const loadGroups = async () => {
     try {
-      const response = await fetch('http://localhost:8010/api/groups');
+      const response = await fetch('http://localhost/api/groups/');
       const data = await response.json();
-      setGroups(data);
+      setGroups(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to load groups:', err);
+      setGroups([]);
     }
   };
 
   const loadMyGroups = async () => {
     try {
-      const response = await fetch('http://localhost:8010/api/groups/my-groups');
+      const response = await fetch('http://localhost/api/groups/my-groups');
       const data = await response.json();
-      setMyGroups(data);
+      setMyGroups(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to load my groups:', err);
+      setMyGroups([]);
     }
   };
 
   const loadMessages = async (groupId: number) => {
     try {
-      const response = await fetch(`http://localhost:8010/api/groups/${groupId}/messages`);
+      const response = await fetch(`http://localhost/api/groups/${groupId}/messages`);
       const data = await response.json();
-      setMessages(data.reverse()); // Show oldest first
+      setMessages(Array.isArray(data) ? data.reverse() : []);
     } catch (err) {
       console.error('Failed to load messages:', err);
+      setMessages([]);
     }
   };
 
@@ -90,7 +93,7 @@ export default function StudyGroupsPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8010/api/groups', {
+      const response = await fetch('http://localhost/api/groups/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -120,7 +123,7 @@ export default function StudyGroupsPage() {
     if (!selectedGroup || !newMessage.trim()) return;
 
     try {
-      const response = await fetch(`http://localhost:8010/api/groups/${selectedGroup.id}/messages`, {
+      const response = await fetch(`http://localhost/api/groups/${selectedGroup.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message_text: newMessage })
@@ -152,7 +155,7 @@ export default function StudyGroupsPage() {
         <div className="lg:col-span-1">
           <h2 className="text-xl font-semibold mb-4">My Groups</h2>
           <div className="space-y-2">
-            {myGroups.map(group => (
+            {myGroups && myGroups.map(group => (
               <div
                 key={group.id}
                 onClick={() => setSelectedGroup(group)}
@@ -172,7 +175,7 @@ export default function StudyGroupsPage() {
 
           <h2 className="text-xl font-semibold mt-8 mb-4">All Groups</h2>
           <div className="space-y-2">
-            {groups.filter(g => !myGroups.find(mg => mg.id === g.id)).map(group => (
+            {groups && myGroups && groups.filter(g => !myGroups.find(mg => mg.id === g.id)).map(group => (
               <div
                 key={group.id}
                 className="p-4 border rounded hover:bg-gray-50"

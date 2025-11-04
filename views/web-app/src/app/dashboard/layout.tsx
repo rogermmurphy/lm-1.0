@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import Navigation from '@/components/Navigation';
+import Sidebar from '@/components/Sidebar';
 import OnboardingModal from '@/components/OnboardingModal';
 
 export default function DashboardLayout({
@@ -38,9 +38,12 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       <OnboardingModal />
-      <Navigation />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+      <Sidebar />
+      {/* Main content area with responsive left margin for sidebar */}
+      <main className="pt-16 pb-16 lg:pt-0 lg:pb-0 lg:ml-16 px-4 sm:px-6 lg:px-8 py-8 transition-all duration-300">
+        <div className="max-w-7xl mx-auto">
+          {children}
+        </div>
       </main>
     </div>
   );

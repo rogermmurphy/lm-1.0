@@ -25,7 +25,7 @@ def get_db():
 # STUDY GROUPS
 # ============================================================================
 
-@router.post("", response_model=dict)
+@router.post("/", response_model=dict)
 async def create_group(
     group: StudyGroupCreate,
     authorization: Optional[str] = Header(None)
@@ -58,7 +58,7 @@ async def create_group(
         conn.close()
 
 
-@router.get("", response_model=List[dict])
+@router.get("/", response_model=List[dict])
 async def get_groups(
     class_id: Optional[int] = None,
     authorization: Optional[str] = Header(None)

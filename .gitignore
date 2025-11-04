@@ -64,6 +64,15 @@ chroma-data/
 # Node modules (if any)
 node_modules/
 
+# Next.js
+.next/
+out/
+*.next
+
+# Build outputs
+build/
+dist/
+
 # Pytest
 .pytest_cache/
 
@@ -81,3 +90,6 @@ models/
 # Local test data
 poc/09-speech-to-text/sample_lecture.mp3
 poc/09-speech-to-text/real_lecture.mp3
+
+# Old/archived projects (nested git repos)
+old/

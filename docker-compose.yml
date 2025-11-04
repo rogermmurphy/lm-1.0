@@ -366,12 +366,10 @@ services:
     volumes:
       - ./services/study-analytics/src:/app/src
     environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=littlemonster
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - JWT_SECRET=${JWT_SECRET_KEY}
+      - database_url=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - jwt_secret_key=${JWT_SECRET_KEY}
+      - jwt_algorithm=HS256
+      - service_port=8012
     depends_on:
       postgres:
         condition: service_healthy
@@ -390,12 +388,10 @@ services:
     volumes:
       - ./services/notifications/src:/app/src
     environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=littlemonster
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - JWT_SECRET=${JWT_SECRET_KEY}
+      - database_url=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - jwt_secret=${JWT_SECRET_KEY}
+      - jwt_algorithm=HS256
+      - service_port=8013
     depends_on:
       postgres:
         condition: service_healthy

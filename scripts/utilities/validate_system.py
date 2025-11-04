@@ -15,7 +15,8 @@ SERVICES = {
 }
 
 # Database check
-DB_CHECK = "psql postgresql://postgres.ynrfvvqxqxqxqxqx@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require -c 'SELECT COUNT(*) FROM users;'"
+# FIXED: Use local Docker PostgreSQL, NOT Supabase!
+DB_CHECK = "docker exec lm-postgres psql -U postgres -d littlemonster -c 'SELECT COUNT(*) FROM users;'"
 
 def check_service(name: str, url: str) -> Tuple[bool, str]:
     """Check if service is responding"""

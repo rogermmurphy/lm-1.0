@@ -3,7 +3,6 @@ AI Study Tools Service - Main Application
 FastAPI service for AI-generated notes, tests, and flashcards
 """
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .routes import notes_router, tests_router, flashcards_router
@@ -16,14 +15,7 @@ app = FastAPI(
 )
 
 # Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"],
-)
+# CORS handled by nginx gateway
 
 # Include routers
 app.include_router(notes_router, prefix="/api")
@@ -32,21 +24,7 @@ app.include_router(flashcards_router, prefix="/api")
 
 
 # Add OPTIONS handler for CORS preflight
-@app.options("/{full_path:path}")
-async def options_handler(full_path: str):
-    """Handle CORS preflight requests"""
-    from fastapi.responses import Response
-    return Response(
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "*",
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Credentials": "true",
-        }
-    )
-
-
+# OPTIONS handled by nginx
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""

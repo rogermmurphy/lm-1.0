@@ -8,7 +8,8 @@ from psycopg2.extras import RealDictCursor
 
 from ..models import Class, ClassCreate, ClassUpdate
 from ..config import settings
-from lm_common.auth.jwt_utils import get_current_user
+# REMOVED: Auth not used in current system design (matches Chat, Flashcards, Groups pattern)
+# from lm_common.auth.jwt_utils import get_current_user
 
 router = APIRouter(prefix="/classes", tags=["classes"])
 
@@ -20,10 +21,11 @@ def get_db_connection():
 
 @router.post("", response_model=Class, status_code=status.HTTP_201_CREATED)
 async def create_class(
-    class_data: ClassCreate,
-    current_user: dict = Depends(get_current_user)
+    class_data: ClassCreate
 ):
     """Create a new class"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -36,7 +38,7 @@ async def create_class(
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING *
         """, (
-            current_user["user_id"],
+            user_id,
             class_data.name,
             class_data.teacher_name,
             class_data.period,
@@ -67,10 +69,10 @@ async def create_class(
 
 
 @router.get("", response_model=List[Class])
-async def list_classes(
-    current_user: dict = Depends(get_current_user)
-):
+async def list_classes():
     """List all classes for the current user"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -79,7 +81,7 @@ async def list_classes(
             SELECT * FROM classes 
             WHERE user_id = %s 
             ORDER BY created_at DESC
-        """, (current_user["user_id"],))
+        """, (user_id,))
         
         classes = cur.fetchall()
         return classes
@@ -91,10 +93,11 @@ async def list_classes(
 
 @router.get("/{class_id}", response_model=Class)
 async def get_class(
-    class_id: int,
-    current_user: dict = Depends(get_current_user)
+    class_id: int
 ):
     """Get a specific class"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -102,7 +105,7 @@ async def get_class(
         cur.execute("""
             SELECT * FROM classes 
             WHERE id = %s AND user_id = %s
-        """, (class_id, current_user["user_id"]))
+        """, (class_id, user_id))
         
         class_data = cur.fetchone()
         
@@ -122,10 +125,11 @@ async def get_class(
 @router.put("/{class_id}", response_model=Class)
 async def update_class(
     class_id: int,
-    class_update: ClassUpdate,
-    current_user: dict = Depends(get_current_user)
+    class_update: ClassUpdate
 ):
     """Update a class"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -134,7 +138,7 @@ async def update_class(
         cur.execute("""
             SELECT id FROM classes 
             WHERE id = %s AND user_id = %s
-        """, (class_id, current_user["user_id"]))
+        """, (class_id, user_id))
         
         if not cur.fetchone():
             raise HTTPException(
@@ -157,7 +161,7 @@ async def update_class(
             )
         
         update_values.append(class_id)
-        update_values.append(current_user["user_id"])
+        update_values.append(user_id)
         
         query = f"""
             UPDATE classes 
@@ -190,10 +194,11 @@ async def update_class(
 
 @router.delete("/{class_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_class(
-    class_id: int,
-    current_user: dict = Depends(get_current_user)
+    class_id: int
 ):
     """Delete a class"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -202,7 +207,7 @@ async def delete_class(
             DELETE FROM classes 
             WHERE id = %s AND user_id = %s
             RETURNING id
-        """, (class_id, current_user["user_id"]))
+        """, (class_id, user_id))
         
         deleted = cur.fetchone()
         
@@ -221,10 +226,11 @@ async def delete_class(
 
 @router.get("/{class_id}/dashboard")
 async def get_class_dashboard(
-    class_id: int,
-    current_user: dict = Depends(get_current_user)
+    class_id: int
 ):
     """Get class dashboard with related content"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -233,7 +239,7 @@ async def get_class_dashboard(
         cur.execute("""
             SELECT * FROM classes 
             WHERE id = %s AND user_id = %s
-        """, (class_id, current_user["user_id"]))
+        """, (class_id, user_id))
         
         class_data = cur.fetchone()
         

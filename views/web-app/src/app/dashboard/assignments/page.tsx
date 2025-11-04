@@ -42,10 +42,10 @@ export default function AssignmentsPage() {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       
       // Fetch classes
-      const classesRes = await fetch('http://localhost:8007/api/classes', {
+      const classesRes = await fetch('http://localhost/api/classes', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (classesRes.ok) {
@@ -54,8 +54,8 @@ export default function AssignmentsPage() {
       
       // Fetch assignments
       const url = filter === 'all' 
-        ? 'http://localhost:8007/api/assignments'
-        : `http://localhost:8007/api/assignments?status_filter=${filter}`;
+        ? 'http://localhost/api/assignments'
+        : `http://localhost/api/assignments?status_filter=${filter}`;
         
       const assignmentsRes = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -73,8 +73,8 @@ export default function AssignmentsPage() {
 
   const createAssignment = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8007/api/assignments', {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch('http://localhost/api/assignments', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -103,8 +103,8 @@ export default function AssignmentsPage() {
 
   const updateStatus = async (id: number, newStatus: string) => {
     try {
-      const token = localStorage.getItem('token');
-      await fetch(`http://localhost:8007/api/assignments/${id}/status?new_status=${newStatus}`, {
+      const token = localStorage.getItem('accessToken');
+      await fetch(`http://localhost/api/assignments/${id}/status?new_status=${newStatus}`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -118,8 +118,8 @@ export default function AssignmentsPage() {
     if (!confirm('Delete this assignment?')) return;
     
     try {
-      const token = localStorage.getItem('token');
-      await fetch(`http://localhost:8007/api/assignments/${id}`, {
+      const token = localStorage.getItem('accessToken');
+      await fetch(`http://localhost/api/assignments/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

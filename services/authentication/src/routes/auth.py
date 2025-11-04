@@ -160,6 +160,16 @@ async def login(
             detail="Invalid email or password"
         )
     
+    # Revoke all existing active refresh tokens for this user
+    # This prevents duplicate token_hash violations and is a security best practice
+    db.query(RefreshToken).filter(
+        RefreshToken.user_id == user.id,
+        RefreshToken.revoked == False
+    ).update({
+        "revoked": True,
+        "revoked_at": datetime.utcnow()
+    })
+    
     # Generate tokens
     access_token = jwt_utils.create_access_token(
         user_id=user.id,

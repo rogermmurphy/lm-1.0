@@ -32,10 +32,18 @@ class MessageService:
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 cur.execute("""
-                    SELECT * FROM user_conversations
-                    WHERE user_id = %s
-                    ORDER BY last_message_time DESC
-                """, (user_id,))
+                    SELECT 
+                        CASE 
+                            WHEN user1_id = %s THEN user2_id 
+                            ELSE user1_id 
+                        END as other_user_id,
+                        last_message_at,
+                        message_count,
+                        unread_count
+                    FROM message_conversations
+                    WHERE user1_id = %s OR user2_id = %s
+                    ORDER BY last_message_at DESC
+                """, (user_id, user_id, user_id))
                 return [dict(row) for row in cur.fetchall()]
         finally:
             conn.close()

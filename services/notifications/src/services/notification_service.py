@@ -17,7 +17,7 @@ class NotificationService:
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 cur.execute("""
-                    SELECT id, user_id, type, title, message, related_id, related_type,
+                    SELECT id, user_id, notification_type as type, title, message, reference_id as related_id, reference_type as related_type,
                            action_url, is_read, read_at, created_at
                     FROM notifications
                     WHERE user_id = %s
@@ -165,9 +165,9 @@ class NotificationService:
         try:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 cur.execute("""
-                    INSERT INTO notifications (user_id, type, title, message, related_id, related_type, action_url)
+                    INSERT INTO notifications (user_id, notification_type, title, message, reference_id, reference_type, action_url)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    RETURNING id, user_id, type, title, message, related_id, related_type,
+                    RETURNING id, user_id, notification_type as type, title, message, reference_id as related_id, reference_type as related_type,
                               action_url, is_read, read_at, created_at
                 """, (
                     notification_data['user_id'],

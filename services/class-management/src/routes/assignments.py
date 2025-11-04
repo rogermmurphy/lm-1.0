@@ -9,7 +9,8 @@ from psycopg2.extras import RealDictCursor
 
 from ..models import Assignment, AssignmentCreate, AssignmentUpdate
 from ..config import settings
-from lm_common.auth.jwt_utils import get_current_user
+# REMOVED: Auth not used in current system design (matches Chat, Flashcards, Groups pattern)
+# from lm_common.auth.jwt_utils import get_current_user
 
 router = APIRouter(prefix="/assignments", tags=["assignments"])
 
@@ -21,10 +22,11 @@ def get_db_connection():
 
 @router.post("", response_model=Assignment, status_code=status.HTTP_201_CREATED)
 async def create_assignment(
-    assignment_data: AssignmentCreate,
-    current_user: dict = Depends(get_current_user)
+    assignment_data: AssignmentCreate
 ):
     """Create a new assignment"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -33,7 +35,7 @@ async def create_assignment(
         cur.execute("""
             SELECT id FROM classes 
             WHERE id = %s AND user_id = %s
-        """, (assignment_data.class_id, current_user["user_id"]))
+        """, (assignment_data.class_id, user_id))
         
         if not cur.fetchone():
             raise HTTPException(
@@ -50,7 +52,7 @@ async def create_assignment(
             RETURNING *
         """, (
             assignment_data.class_id,
-            current_user["user_id"],
+            user_id,
             assignment_data.title,
             assignment_data.type,
             assignment_data.description,
@@ -77,16 +79,17 @@ async def create_assignment(
 @router.get("", response_model=List[Assignment])
 async def list_assignments(
     class_id: Optional[int] = Query(None),
-    status_filter: Optional[str] = Query(None),
-    current_user: dict = Depends(get_current_user)
+    status_filter: Optional[str] = Query(None)
 ):
     """List assignments with optional filters"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
     try:
         query = "SELECT * FROM assignments WHERE user_id = %s"
-        params = [current_user["user_id"]]
+        params = [user_id]
         
         if class_id:
             query += " AND class_id = %s"
@@ -109,10 +112,11 @@ async def list_assignments(
 
 @router.get("/upcoming", response_model=List[Assignment])
 async def get_upcoming_assignments(
-    days: int = Query(7, ge=1, le=30),
-    current_user: dict = Depends(get_current_user)
+    days: int = Query(7, ge=1, le=30)
 ):
     """Get upcoming assignments within specified days"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -123,7 +127,7 @@ async def get_upcoming_assignments(
             AND due_date BETWEEN NOW() AND NOW() + INTERVAL '%s days'
             AND status != 'completed'
             ORDER BY due_date ASC
-        """, (current_user["user_id"], days))
+        """, (user_id, days))
         
         assignments = cur.fetchall()
         return assignments
@@ -135,10 +139,11 @@ async def get_upcoming_assignments(
 
 @router.get("/{assignment_id}", response_model=Assignment)
 async def get_assignment(
-    assignment_id: int,
-    current_user: dict = Depends(get_current_user)
+    assignment_id: int
 ):
     """Get a specific assignment"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -146,7 +151,7 @@ async def get_assignment(
         cur.execute("""
             SELECT * FROM assignments 
             WHERE id = %s AND user_id = %s
-        """, (assignment_id, current_user["user_id"]))
+        """, (assignment_id, user_id))
         
         assignment = cur.fetchone()
         
@@ -166,10 +171,11 @@ async def get_assignment(
 @router.put("/{assignment_id}", response_model=Assignment)
 async def update_assignment(
     assignment_id: int,
-    assignment_update: AssignmentUpdate,
-    current_user: dict = Depends(get_current_user)
+    assignment_update: AssignmentUpdate
 ):
     """Update an assignment"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -178,7 +184,7 @@ async def update_assignment(
         cur.execute("""
             SELECT id FROM assignments 
             WHERE id = %s AND user_id = %s
-        """, (assignment_id, current_user["user_id"]))
+        """, (assignment_id, user_id))
         
         if not cur.fetchone():
             raise HTTPException(
@@ -201,7 +207,7 @@ async def update_assignment(
             )
         
         update_values.append(assignment_id)
-        update_values.append(current_user["user_id"])
+        update_values.append(user_id)
         
         query = f"""
             UPDATE assignments 
@@ -230,10 +236,11 @@ async def update_assignment(
 @router.patch("/{assignment_id}/status", response_model=Assignment)
 async def update_assignment_status(
     assignment_id: int,
-    new_status: str = Query(..., pattern="^(pending|in-progress|completed|overdue)$"),
-    current_user: dict = Depends(get_current_user)
+    new_status: str = Query(..., pattern="^(pending|in-progress|completed|overdue)$")
 ):
     """Update assignment status"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -243,7 +250,7 @@ async def update_assignment_status(
             SET status = %s
             WHERE id = %s AND user_id = %s
             RETURNING *
-        """, (new_status, assignment_id, current_user["user_id"]))
+        """, (new_status, assignment_id, user_id))
         
         updated_assignment = cur.fetchone()
         
@@ -263,10 +270,11 @@ async def update_assignment_status(
 
 @router.delete("/{assignment_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_assignment(
-    assignment_id: int,
-    current_user: dict = Depends(get_current_user)
+    assignment_id: int
 ):
     """Delete an assignment"""
+    # TODO: Get user_id from JWT token when auth is implemented
+    user_id = 1
     conn = get_db_connection()
     cur = conn.cursor()
     
@@ -275,7 +283,7 @@ async def delete_assignment(
             DELETE FROM assignments 
             WHERE id = %s AND user_id = %s
             RETURNING id
-        """, (assignment_id, current_user["user_id"]))
+        """, (assignment_id, user_id))
         
         deleted = cur.fetchone()
         

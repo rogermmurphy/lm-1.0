@@ -40,28 +40,37 @@ class VectorService:
     
     def _init_chroma(self):
         """Initialize ChromaDB client"""
+        # Use PersistentClient for local development to avoid tenant issues
+        # For production with remote ChromaDB, configure HttpClient properly
         try:
-            # Connect to ChromaDB server
-            self.chroma_client = chromadb.HttpClient(
-                host=settings.CHROMA_HOST,
-                port=settings.CHROMA_PORT
-            )
+            # Try HttpClient first if host is not localhost
+            if settings.CHROMA_HOST not in ['localhost', '127.0.0.1', 'lm-chroma']:
+                self.chroma_client = chromadb.HttpClient(
+                    host=settings.CHROMA_HOST,
+                    port=settings.CHROMA_PORT
+                )
+            else:
+                # Use PersistentClient for local ChromaDB to avoid tenant configuration
+                print("Using ChromaDB PersistentClient for local development")
+                self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
             
             # Get or create collection
             try:
                 self.collection = self.chroma_client.get_collection(
                     name=self.collection_name
                 )
+                print(f"Connected to existing collection: {self.collection_name}")
             except Exception:
                 # Create collection if it doesn't exist
                 self.collection = self.chroma_client.create_collection(
                     name=self.collection_name,
                     metadata={"description": "Content embeddings for photos, textbooks, and audio"}
                 )
+                print(f"Created new collection: {self.collection_name}")
                 
         except Exception as e:
-            print(f"Failed to initialize ChromaDB: {e}")
-            # Fallback to persistent client
+            print(f"ChromaDB connection failed, using fallback PersistentClient: {e}")
+            # Ultimate fallback to persistent client
             self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
             try:
                 self.collection = self.chroma_client.get_collection(

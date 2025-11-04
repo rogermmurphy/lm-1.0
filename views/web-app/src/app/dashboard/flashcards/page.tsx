@@ -45,7 +45,7 @@ export default function FlashcardsPage() {
   const loadDecks = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8009/api/flashcards/decks/user/${user?.id || 1}`);
+      const response = await fetch(`http://localhost/api/flashcards/decks/user/${user?.id || 1}`);
       if (response.ok) {
         const data = await response.json();
         setDecks(data);
@@ -60,7 +60,7 @@ export default function FlashcardsPage() {
   const createDeck = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8009/api/flashcards/decks', {
+      const response = await fetch('http://localhost/api/flashcards/decks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -88,7 +88,7 @@ export default function FlashcardsPage() {
     
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8009/api/flashcards/cards', {
+      const response = await fetch('http://localhost/api/flashcards/cards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -103,7 +103,7 @@ export default function FlashcardsPage() {
         setBackText('');
         setShowAddCard(false);
         // Reload the selected deck
-        const deckResponse = await fetch(`http://localhost:8009/api/flashcards/decks/${selectedDeck.id}`);
+        const deckResponse = await fetch(`http://localhost/api/flashcards/decks/${selectedDeck.id}`);
         if (deckResponse.ok) {
           const updatedDeck = await deckResponse.json();
           setSelectedDeck(updatedDeck);
@@ -121,7 +121,7 @@ export default function FlashcardsPage() {
     if (!selectedDeck || !selectedDeck.cards[currentCardIndex]) return;
     
     try {
-      await fetch('http://localhost:8009/api/flashcards/reviews', {
+      await fetch('http://localhost/api/flashcards/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

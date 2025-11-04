@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from lm_common.database import get_db
-from lm_common.auth.jwt_utils import verify_token
+from lm_common.auth.jwt_utils import decode_token
 
 from ..models import User
 from ..schemas import SessionResponse, MessageResponse
@@ -37,7 +37,14 @@ async def get_active_sessions(
         )
     
     token = auth_header.split(' ')[1]
-    payload = verify_token(token)
+    payload = decode_token(token)
+    
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token"
+        )
+    
     user_id = payload.get('sub')
     
     if not user_id:
@@ -81,7 +88,14 @@ async def terminate_session(
         )
     
     token = auth_header.split(' ')[1]
-    payload = verify_token(token)
+    payload = decode_token(token)
+    
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token"
+        )
+    
     user_id = payload.get('sub')
     
     if not user_id:
@@ -130,7 +144,14 @@ async def terminate_all_sessions(
         )
     
     token = auth_header.split(' ')[1]
-    payload = verify_token(token)
+    payload = decode_token(token)
+    
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token"
+        )
+    
     user_id = payload.get('sub')
     
     if not user_id:

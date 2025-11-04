@@ -13,7 +13,7 @@ notification_service = NotificationService()
 def get_current_user_id():
     return 7  # Test user
 
-@router.get("", response_model=List[NotificationResponse])
+@router.get("/", response_model=List[NotificationResponse])
 async def list_notifications(
     limit: int = 50,
     offset: int = 0,

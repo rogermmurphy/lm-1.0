@@ -3,7 +3,6 @@ Study Analytics Service - Main Application
 FastAPI service for study session tracking, performance analytics, and goal management
 """
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 from .config import settings
@@ -24,32 +23,10 @@ app = FastAPI(
 )
 
 # Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS handled by nginx gateway
 
 # Add OPTIONS handler for preflight requests
-@app.options("/{path:path}")
-async def options_handler(request: Request, path: str):
-    """Handle OPTIONS requests for CORS preflight"""
-    return JSONResponse(
-        content={"message": "OK"},
-        headers={
-            "Access-Control-Allow-Origin": ",".join(settings.cors_origins_list),
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "*",
-        }
-    )
-
-# Include routers
-app.include_router(sessions.router, prefix="/api/analytics")
-app.include_router(goals.router, prefix="/api/analytics")
-
-# Health check endpoint
+# OPTIONS handled by nginx
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""

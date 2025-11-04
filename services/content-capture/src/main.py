@@ -3,7 +3,6 @@ Content Capture Service - Main Application
 FastAPI service for photo capture, textbook processing, and vector embeddings
 """
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import sys
 import os
 
@@ -21,13 +20,7 @@ app = FastAPI(
 )
 
 # Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS handled by nginx gateway
 
 # Include routers
 app.include_router(photos_router, prefix="/api")

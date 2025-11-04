@@ -12,7 +12,7 @@ class Settings:
     SERVICE_PORT: int = int(os.getenv("SERVICE_PORT", "8010"))
     
     # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/littlemonster")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@lm-postgres:5432/littlemonster")
     
     # JWT
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "")

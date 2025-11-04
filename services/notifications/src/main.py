@@ -1,22 +1,16 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .routes import notifications, messages
 
 app = FastAPI(
     title="Notifications Service",
     description="Notifications and messaging service for LM GPA platform",
-    version="1.0.0"
+    version="1.0.0",
+    redirect_slashes=False
 )
 
 # CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS handled by nginx gateway
 
 # Include routers
 app.include_router(notifications.router)
