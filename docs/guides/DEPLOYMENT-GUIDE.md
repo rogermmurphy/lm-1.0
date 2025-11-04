@@ -1,3 +1,5 @@
+**Last Updated:** November 4, 2025
+
 # Little Monster - Deployment Guide
 
 ## Complete Deployment Instructions

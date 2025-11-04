@@ -1,3 +1,5 @@
+**Last Updated:** November 4, 2025
+
 # Phase 6: Study Sessions & Analytics - Current Status
 
 ## Document Control

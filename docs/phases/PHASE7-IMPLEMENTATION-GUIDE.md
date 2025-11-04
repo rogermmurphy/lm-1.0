@@ -1,3 +1,5 @@
+**Last Updated:** November 4, 2025
+
 # Phase 7 Implementation Guide: Notifications & Communication Service
 
 ## Overview

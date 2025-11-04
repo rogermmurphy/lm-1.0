@@ -1,9 +1,9 @@
 # Little Monster - Project Charter
 
 ## Document Control
-- **Version**: 1.0
-- **Date**: November 1, 2025
-- **Status**: Draft
+- **Version**: 2.0
+- **Last Updated**: November 4, 2025
+- **Status**: Alpha 1.0 Complete - All Services Deployed
 - **Owner**: Development Team
 
 ---
@@ -431,7 +431,9 @@ This project charter requires approval from:
 - POC Documentation (poc/ directory)
 - Previous Implementation (old/Ella-Ai/ directory)
 - Technical specifications (docs/TECHNICAL-SPECIFICATIONS.md)
-- Architecture documents (docs/TECHNICAL-ARCHITECTURE.md)
+- Architecture documents (docs/TECHNICAL-ARCHITECTURE.md) - Updated Nov 4, 2025
+- Business process flows (docs/BUSINESS-PROCESS-FLOWS.md)
+- Deployment guide (docs/DEPLOYMENT-OPERATIONS-GUIDE.md)
 
 ### C. Related Documents
 

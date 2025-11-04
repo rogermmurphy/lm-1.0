@@ -1,3 +1,5 @@
+**Last Updated:** November 4, 2025
+
 # Developer Handover - E2E Testing & Remediation
 **Last Updated**: November 3, 2025, 10:54 PM
 **Status**: TASK INCOMPLETE - Groups TypeError Persists Despite Fix
@@ -201,8 +203,8 @@ See original sections below for full details of these fixes.
 11. `docs/implementation/E2E-TESTING-SESSION-RESULTS.md` - This session's (flawed) results
 
 ### System Architecture
-12. `docs/alpha-0.9/SYSTEM-ARCHITECTURE.md` - Overall architecture
-13. `docs/alpha-0.9/INTEGRATION-ARCHITECTURE.md` - Service integration
+12. `docs/TECHNICAL-ARCHITECTURE.md` - Overall architecture
+13. `docs/TECHNICAL-ARCHITECTURE.md` - Service integration
 14. `docs/alpha-0.9/PORTS-AND-CONFIGURATION.md` - Service ports and config
 15. `docs/alpha-0.9/BUSINESS-PROCESS-FLOWS.md` - User workflows
 16. `docs/TECHNICAL-ARCHITECTURE.md` - Technical design decisions

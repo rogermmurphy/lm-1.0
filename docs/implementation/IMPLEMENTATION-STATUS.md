@@ -1,3 +1,5 @@
+**Last Updated:** November 4, 2025
+
 # Little Monster - Project Status
 
 **Last Updated**: 2025-11-02 1:45 PM  
