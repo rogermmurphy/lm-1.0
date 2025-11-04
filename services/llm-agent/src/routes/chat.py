@@ -21,12 +21,23 @@ from ..schemas import (
     MessageResponse
 )
 from ..services import RAGService, LLMService
+from ..services.agent_service import AgentService
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 # Initialize services (singleton pattern)
 rag_service = RAGService()
 llm_service = LLMService()
+
+# Initialize agent service (with error handling for graceful fallback)
+try:
+    agent_service = AgentService()
+    USE_AGENT = True
+except Exception as e:
+    print(f"Warning: AgentService initialization failed: {e}")
+    print("Falling back to basic LLM service")
+    agent_service = None
+    USE_AGENT = False
 
 
 @router.post("/message", response_model=ChatMessageResponse)
@@ -79,22 +90,31 @@ async def send_message(
         for msg in history_messages
     ]
     
-    # Get RAG context if enabled
-    context = ""
-    sources = []
-    if request.use_rag:
-        try:
-            context, sources = rag_service.get_context_for_query(request.message, n_results=3)
-        except Exception as e:
-            print(f"RAG retrieval failed: {e}")
-    
-    # Generate response
+    # Generate response using agent service (with fallback to basic LLM)
     try:
-        response_text = llm_service.chat_with_context(
-            message=request.message,
-            context=context,
-            conversation_history=conversation_history
-        )
+        if USE_AGENT and agent_service:
+            # Use agent with tool capabilities
+            response_text = agent_service.chat(
+                message=request.message,
+                conversation_history=conversation_history,
+                use_rag=request.use_rag
+            )
+            sources = []  # Agent handles RAG internally
+        else:
+            # Fallback to basic LLM service
+            context = ""
+            sources = []
+            if request.use_rag:
+                try:
+                    context, sources = rag_service.get_context_for_query(request.message, n_results=3)
+                except Exception as e:
+                    print(f"RAG retrieval failed: {e}")
+            
+            response_text = llm_service.chat_with_context(
+                message=request.message,
+                context=context,
+                conversation_history=conversation_history
+            )
     except Exception as e:
         import traceback
         print(f"Error generating response: {str(e)}")

@@ -30,6 +30,10 @@ requests>=2.31.0
 
 # AWS Bedrock (Cloud LLM for fast testing)
 boto3>=1.28.0
+langchain-aws>=0.2.0
+
+# HTTP client for tool API calls
+httpx>=0.25.0
 
 # Environment
 python-dotenv>=1.0.0

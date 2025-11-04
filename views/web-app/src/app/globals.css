@@ -2,13 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 🩷 Little Monster base theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --lm-cream: #fff7f2;
+  --lm-pink:  #f6c6d0;
+  --lm-purple:#b89bff;
+  --lm-gray:  #444444;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--lm-cream);
+  color: var(--lm-gray);
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
 }
