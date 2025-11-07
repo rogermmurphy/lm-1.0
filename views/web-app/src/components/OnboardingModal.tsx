@@ -7,11 +7,9 @@ export default function OnboardingModal() {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    // Check if user has seen onboarding
-    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-    if (!hasSeenOnboarding) {
-      setIsOpen(true);
-    }
+    // DISABLED FOR TESTING: Auto-set onboarding as seen
+    localStorage.setItem('hasSeenOnboarding', 'true');
+    setIsOpen(false);
   }, []);
 
   const steps = [

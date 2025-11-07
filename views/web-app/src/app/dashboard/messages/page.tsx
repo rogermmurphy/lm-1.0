@@ -94,20 +94,20 @@ export default function MessagesPage() {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-sm h-[calc(100vh-12rem)] flex">
+      <div className="bg-white rounded-lg shadow-sm h-[calc(100vh-12rem)] flex border-2 border-lmPink/30">
         {/* Conversations List */}
-        <div className="w-1/3 border-r border-gray-200 flex flex-col">
-          <div className="px-4 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900">Messages</h2>
+        <div className="w-1/3 border-r-2 border-lmPink/30 flex flex-col">
+          <div className="px-4 py-4 border-b-2 border-lmPink/30">
+            <h2 className="text-xl font-bold text-lmGray">Messages</h2>
           </div>
 
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="px-4 py-8 text-center text-gray-500">
+              <div className="px-4 py-8 text-center text-lmGray/60">
                 Loading conversations...
               </div>
             ) : conversations.length === 0 ? (
-              <div className="px-4 py-8 text-center text-gray-500">
+              <div className="px-4 py-8 text-center text-lmGray/60">
                 No conversations yet
               </div>
             ) : (
@@ -115,26 +115,26 @@ export default function MessagesPage() {
                 <div
                   key={conversation.user_id}
                   onClick={() => handleSelectConversation(conversation.user_id)}
-                  className={`px-4 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                    selectedUserId === conversation.user_id ? 'bg-blue-50' : ''
+                  className={`px-4 py-3 border-b border-lmPink/20 cursor-pointer hover:bg-lmCream ${
+                    selectedUserId === conversation.user_id ? 'bg-lmPink/10' : ''
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
-                        <h3 className="text-sm font-semibold text-gray-900">
+                        <h3 className="text-sm font-semibold text-lmGray">
                           {conversation.username}
                         </h3>
                         {conversation.unread_count > 0 && (
-                          <span className="px-2 py-0.5 text-xs font-bold text-white bg-blue-600 rounded-full">
+                          <span className="px-2 py-0.5 text-xs font-bold text-white bg-lmPurple rounded-full">
                             {conversation.unread_count}
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mt-1 truncate">
+                      <p className="text-sm text-lmGray/70 mt-1 truncate">
                         {conversation.last_message}
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-lmGray/50 mt-1">
                         {timeAgo(conversation.last_message_time)}
                       </p>
                     </div>
@@ -150,8 +150,8 @@ export default function MessagesPage() {
           {selectedUserId ? (
             <>
               {/* Thread Header */}
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">
+              <div className="px-6 py-4 border-b-2 border-lmPink/30">
+                <h3 className="text-lg font-semibold text-lmGray">
                   {selectedConversation?.username}
                 </h3>
               </div>
@@ -159,7 +159,7 @@ export default function MessagesPage() {
               {/* Messages */}
               <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
                 {messageThread.length === 0 ? (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="text-center text-lmGray/60 py-8">
                     No messages yet. Start the conversation!
                   </div>
                 ) : (
@@ -173,14 +173,14 @@ export default function MessagesPage() {
                         <div
                           className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                             isSent
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-900'
+                              ? 'bg-lmPink text-white'
+                              : 'bg-lmCream border border-lmPink/30 text-lmGray'
                           }`}
                         >
                           <p className="text-sm">{message.content}</p>
                           <p
                             className={`text-xs mt-1 ${
-                              isSent ? 'text-blue-100' : 'text-gray-500'
+                              isSent ? 'text-white/70' : 'text-lmGray/60'
                             }`}
                           >
                             {timeAgo(message.created_at)}
@@ -193,7 +193,7 @@ export default function MessagesPage() {
               </div>
 
               {/* Message Input */}
-              <div className="px-6 py-4 border-t border-gray-200">
+              <div className="px-6 py-4 border-t-2 border-lmPink/30">
                 <div className="flex space-x-2">
                   <input
                     type="text"
@@ -201,13 +201,13 @@ export default function MessagesPage() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Type a message..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-4 py-2 border border-lmPink/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-lmPurple"
                     disabled={sending}
                   />
                   <button
                     onClick={handleSendMessage}
                     disabled={!newMessage.trim() || sending}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="px-6 py-2 bg-lmPink text-white rounded-lg hover:bg-lmPink/90 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {sending ? 'Sending...' : 'Send'}
                   </button>
@@ -215,10 +215,10 @@ export default function MessagesPage() {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-500">
+            <div className="flex-1 flex items-center justify-center text-lmGray/60">
               <div className="text-center">
                 <svg
-                  className="w-16 h-16 mx-auto mb-4 text-gray-300"
+                  className="w-16 h-16 mx-auto mb-4 text-lmPink/30"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

@@ -45,7 +45,7 @@ export default function FlashcardsPage() {
   const loadDecks = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost/api/flashcards/decks/user/${user?.id || 1}`);
+      const response = await fetch(`/api/flashcards/decks/user/${user?.id || 1}`);
       if (response.ok) {
         const data = await response.json();
         setDecks(data);
@@ -60,7 +60,7 @@ export default function FlashcardsPage() {
   const createDeck = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost/api/flashcards/decks', {
+      const response = await fetch('/api/flashcards/decks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -88,7 +88,7 @@ export default function FlashcardsPage() {
     
     try {
       setLoading(true);
-      const response = await fetch('http://localhost/api/flashcards/cards', {
+      const response = await fetch('/api/flashcards/cards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -103,7 +103,7 @@ export default function FlashcardsPage() {
         setBackText('');
         setShowAddCard(false);
         // Reload the selected deck
-        const deckResponse = await fetch(`http://localhost/api/flashcards/decks/${selectedDeck.id}`);
+        const deckResponse = await fetch(`/api/flashcards/decks/${selectedDeck.id}`);
         if (deckResponse.ok) {
           const updatedDeck = await deckResponse.json();
           setSelectedDeck(updatedDeck);
@@ -121,7 +121,7 @@ export default function FlashcardsPage() {
     if (!selectedDeck || !selectedDeck.cards[currentCardIndex]) return;
     
     try {
-      await fetch('http://localhost/api/flashcards/reviews', {
+      await fetch('/api/flashcards/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -146,8 +146,8 @@ export default function FlashcardsPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Flashcards</h1>
-        <p className="text-gray-600 mt-2">Study with spaced repetition</p>
+        <h1 className="text-3xl font-bold text-lmGray">Flashcards</h1>
+        <p className="text-lmGray/70 mt-2">Study with spaced repetition</p>
       </div>
 
       {error && (
@@ -159,43 +159,43 @@ export default function FlashcardsPage() {
       {!selectedDeck ? (
         <div>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Your Decks</h2>
+            <h2 className="text-xl font-semibold text-lmGray">Your Decks</h2>
             <button
               onClick={() => setShowCreateDeck(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-lmPink text-white px-4 py-2 rounded hover:bg-lmPink/90"
             >
               Create New Deck
             </button>
           </div>
 
           {showCreateDeck && (
-            <div className="bg-white p-6 rounded-lg shadow mb-6">
-              <h3 className="text-lg font-semibold mb-4">Create Flashcard Deck</h3>
+            <div className="bg-white p-6 rounded-lg shadow mb-6 border-2 border-lmPink/30">
+              <h3 className="text-lg font-semibold mb-4 text-lmGray">Create Flashcard Deck</h3>
               <input
                 type="text"
                 placeholder="Deck Title"
                 value={deckTitle}
                 onChange={(e) => setDeckTitle(e.target.value)}
-                className="w-full px-4 py-2 border rounded mb-3"
+                className="w-full px-4 py-2 border border-lmPink/30 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-lmPurple"
               />
               <textarea
                 placeholder="Description (optional)"
                 value={deckDescription}
                 onChange={(e) => setDeckDescription(e.target.value)}
-                className="w-full px-4 py-2 border rounded mb-3"
+                className="w-full px-4 py-2 border border-lmPink/30 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 rows={3}
               />
               <div className="flex gap-2">
                 <button
                   onClick={createDeck}
                   disabled={!deckTitle || loading}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300"
+                  className="bg-lmPink text-white px-4 py-2 rounded hover:bg-lmPink/90 disabled:opacity-50"
                 >
                   Create
                 </button>
                 <button
                   onClick={() => setShowCreateDeck(false)}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
+                  className="bg-lmCream border border-lmPink/30 text-lmGray px-4 py-2 rounded hover:bg-lmPink/10"
                 >
                   Cancel
                 </button>
@@ -208,11 +208,11 @@ export default function FlashcardsPage() {
               <div
                 key={deck.id}
                 onClick={() => setSelectedDeck(deck)}
-                className="bg-white p-6 rounded-lg shadow hover:shadow-lg cursor-pointer transition"
+                className="bg-white p-6 rounded-lg shadow hover:shadow-lg cursor-pointer transition border-2 border-lmPink/30"
               >
-                <h3 className="text-lg font-semibold mb-2">{deck.title}</h3>
-                <p className="text-gray-600 text-sm mb-3">{deck.description}</p>
-                <div className="text-sm text-gray-500">
+                <h3 className="text-lg font-semibold mb-2 text-lmGray">{deck.title}</h3>
+                <p className="text-lmGray/70 text-sm mb-3">{deck.description}</p>
+                <div className="text-sm text-lmGray/60">
                   {deck.card_count} cards
                 </div>
               </div>
@@ -220,7 +220,7 @@ export default function FlashcardsPage() {
           </div>
 
           {decks.length === 0 && !loading && (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-lmGray/60">
               No flashcard decks yet. Create one to get started!
             </div>
           )}
@@ -235,49 +235,49 @@ export default function FlashcardsPage() {
                   setCurrentCardIndex(0);
                   setShowAnswer(false);
                 }}
-                className="text-blue-600 hover:text-blue-700 mb-2"
+                className="text-lmPurple hover:text-lmPurple/80 mb-2"
               >
                 ← Back to Decks
               </button>
-              <h2 className="text-2xl font-bold">{selectedDeck.title}</h2>
-              <p className="text-gray-600">{selectedDeck.description}</p>
+              <h2 className="text-2xl font-bold text-lmGray">{selectedDeck.title}</h2>
+              <p className="text-lmGray/70">{selectedDeck.description}</p>
             </div>
             <button
               onClick={() => setShowAddCard(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-lmPink text-white px-4 py-2 rounded hover:bg-lmPink/90"
             >
               Add Card
             </button>
           </div>
 
           {showAddCard && (
-            <div className="bg-white p-6 rounded-lg shadow mb-6">
-              <h3 className="text-lg font-semibold mb-4">Add Flashcard</h3>
+            <div className="bg-white p-6 rounded-lg shadow mb-6 border-2 border-lmPink/30">
+              <h3 className="text-lg font-semibold mb-4 text-lmGray">Add Flashcard</h3>
               <textarea
                 placeholder="Front (Question)"
                 value={frontText}
                 onChange={(e) => setFrontText(e.target.value)}
-                className="w-full px-4 py-2 border rounded mb-3"
+                className="w-full px-4 py-2 border border-lmPink/30 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 rows={3}
               />
               <textarea
                 placeholder="Back (Answer)"
                 value={backText}
                 onChange={(e) => setBackText(e.target.value)}
-                className="w-full px-4 py-2 border rounded mb-3"
+                className="w-full px-4 py-2 border border-lmPink/30 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 rows={3}
               />
               <div className="flex gap-2">
                 <button
                   onClick={addCard}
                   disabled={!frontText || !backText || loading}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-300"
+                  className="bg-lmPink text-white px-4 py-2 rounded hover:bg-lmPink/90 disabled:opacity-50"
                 >
                   Add Card
                 </button>
                 <button
                   onClick={() => setShowAddCard(false)}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
+                  className="bg-lmCream border border-lmPink/30 text-lmGray px-4 py-2 rounded hover:bg-lmPink/10"
                 >
                   Cancel
                 </button>
@@ -287,19 +287,19 @@ export default function FlashcardsPage() {
 
           {currentCard ? (
             <div className="max-w-2xl mx-auto">
-              <div className="text-center mb-4 text-gray-600">
+              <div className="text-center mb-4 text-lmGray/70">
                 Card {currentCardIndex + 1} of {selectedDeck.cards.length}
               </div>
 
               <div
                 onClick={() => setShowAnswer(!showAnswer)}
-                className="bg-white p-12 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition min-h-[300px] flex items-center justify-center"
+                className="bg-white p-12 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition min-h-[300px] flex items-center justify-center border-2 border-lmPink/30"
               >
                 <div className="text-center">
-                  <div className="text-2xl font-semibold mb-4">
+                  <div className="text-2xl font-semibold mb-4 text-lmGray">
                     {showAnswer ? currentCard.back_text : currentCard.front_text}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-lmGray/60">
                     {showAnswer ? 'Click to see question' : 'Click to reveal answer'}
                   </div>
                 </div>
@@ -307,7 +307,7 @@ export default function FlashcardsPage() {
 
               {showAnswer && (
                 <div className="mt-6">
-                  <p className="text-center text-gray-700 mb-4">How well did you know this?</p>
+                  <p className="text-center text-lmGray/80 mb-4">How well did you know this?</p>
                   <div className="flex justify-center gap-2">
                     <button
                       onClick={() => reviewCard(1)}
@@ -329,7 +329,7 @@ export default function FlashcardsPage() {
                     </button>
                     <button
                       onClick={() => reviewCard(5)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      className="bg-lmPurple text-white px-4 py-2 rounded hover:bg-lmPurple/90"
                     >
                       Easy
                     </button>
@@ -338,7 +338,7 @@ export default function FlashcardsPage() {
               )}
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-lmGray/60">
               No cards in this deck yet. Add some cards to start studying!
             </div>
           )}

@@ -140,8 +140,26 @@ export const chat = {
   deleteConversation: (conversationId: number) =>
     api.delete(`/api/chat/conversations/${conversationId}`),
   
+  getConversationMessages: (conversationId: number) =>
+    api.get(`/api/chat/conversations/${conversationId}/messages`),
+  
   uploadMaterial: (title: string, content: string, subject?: string) =>
     api.post('/api/chat/materials', { title, content, subject }),
+  
+  getVoices: () =>
+    api.get('/api/chat/voices'),
+  
+  speak: (text: string, voice?: string) =>
+    api.post('/api/tts/generate', { text, voice }),
+  
+  transcribe: (audioBlob: Blob) => {
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'recording.wav');
+    formData.append('language', 'en');
+    return api.post('/api/transcribe/', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // Transcription API

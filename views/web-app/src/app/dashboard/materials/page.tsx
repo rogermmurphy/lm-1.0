@@ -105,19 +105,19 @@ export default function MaterialsPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-lmPink/30">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-lmGray mb-2">
               Study Materials
             </h1>
-            <p className="text-gray-600">
+            <p className="text-lmGray/70">
               Upload and manage your learning resources for RAG-powered tutoring
             </p>
           </div>
           <button
             onClick={() => setShowUploadForm(!showUploadForm)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+            className="px-4 py-2 bg-lmPink text-white rounded-md hover:bg-lmPink/90 font-medium"
           >
             {showUploadForm ? '✕ Cancel' : '📤 Upload Material'}
           </button>
@@ -131,30 +131,30 @@ export default function MaterialsPage() {
 
         {/* Upload Form */}
         {showUploadForm && (
-          <div className="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-6 space-y-4">
-            <h3 className="font-semibold text-gray-900">Upload New Material</h3>
+          <div className="mb-6 bg-lmCream border-2 border-lmPink/30 rounded-lg p-6 space-y-4">
+            <h3 className="font-semibold text-lmGray">Upload New Material</h3>
             
             {/* File Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-lmGray mb-2">
                 Upload File (Optional)
               </label>
               <input
                 type="file"
                 accept=".txt,.md,.pdf,.docx"
                 onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500
+                className="block w-full text-sm text-lmGray
                   file:mr-4 file:py-2 file:px-4
                   file:rounded-md file:border-0
                   file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
+                  file:bg-lmPink/20 file:text-lmGray
+                  hover:file:bg-lmPink/30"
               />
             </div>
 
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-lmGray mb-2">
                 Title *
               </label>
               <input
@@ -162,13 +162,13 @@ export default function MaterialsPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., Chapter 3: Photosynthesis"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lmPurple"
               />
             </div>
 
             {/* Subject */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-lmGray mb-2">
                 Subject (Optional)
               </label>
               <input
@@ -176,13 +176,13 @@ export default function MaterialsPage() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="e.g., Biology"
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lmPurple"
               />
             </div>
 
             {/* Content */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-lmGray mb-2">
                 Content *
               </label>
               <textarea
@@ -190,9 +190,9 @@ export default function MaterialsPage() {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Paste or type your study material content here..."
                 rows={10}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
+                className="block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lmPurple font-mono text-sm"
               />
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-lmGray/60">
                 {content.length} characters
               </p>
             </div>
@@ -201,7 +201,7 @@ export default function MaterialsPage() {
             <button
               onClick={handleUpload}
               disabled={!title.trim() || !content.trim() || isUploading}
-              className="w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="w-full py-3 px-4 bg-lmPink text-white rounded-md hover:bg-lmPink/90 focus:outline-none focus:ring-2 focus:ring-lmPurple disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {isUploading ? 'Uploading...' : 'Upload Material'}
             </button>
@@ -211,21 +211,21 @@ export default function MaterialsPage() {
         {/* Materials List */}
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading materials...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-lmPurple mx-auto"></div>
+            <p className="mt-4 text-lmGray/70">Loading materials...</p>
           </div>
         ) : materials.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📚</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-lmGray mb-2">
               No Materials Yet
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-lmGray/70 mb-4">
               Upload study materials to enable RAG-powered tutoring
             </p>
             <button
               onClick={() => setShowUploadForm(true)}
-              className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+              className="px-6 py-3 bg-lmPink text-white rounded-md hover:bg-lmPink/90 font-medium"
             >
               📤 Upload Your First Material
             </button>
@@ -235,20 +235,20 @@ export default function MaterialsPage() {
             {materials.map((material) => (
               <div
                 key={material.id}
-                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="bg-white border-2 border-lmPink/30 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-gray-900">{material.title}</h3>
+                  <h3 className="font-semibold text-lmGray">{material.title}</h3>
                   {material.subject && (
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                    <span className="px-2 py-1 bg-lmPurple/20 text-lmPurple text-xs rounded-full">
                       {material.subject}
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                <p className="text-sm text-lmGray/70 mb-3 line-clamp-3">
                   {material.content_preview}
                 </p>
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between text-xs text-lmGray/60">
                   <span>{new Date(material.created_at).toLocaleDateString()}</span>
                   <button className="text-red-600 hover:text-red-800">
                     🗑️ Delete
@@ -260,9 +260,9 @@ export default function MaterialsPage() {
         )}
 
         {/* Info */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">💡 How It Works</h3>
-          <ul className="text-sm text-blue-800 space-y-1">
+        <div className="mt-6 bg-gradient-to-r from-lmCream to-lmPink/20 border-2 border-lmPink/30 rounded-lg p-4">
+          <h3 className="font-semibold text-lmGray mb-2">💡 How It Works</h3>
+          <ul className="text-sm text-lmGray/80 space-y-1">
             <li>• Upload lecture notes, textbooks, or study guides</li>
             <li>• Materials are indexed using vector embeddings</li>
             <li>• AI tutor can reference your materials when answering questions</li>

@@ -16,11 +16,11 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = os.getenv(
         "DATABASE_URL",
-        "postgresql://postgres:postgres@localhost:5432/littlemonster"
+        "postgresql://postgres:postgres@postgres:5432/littlemonster"
     )
     
     # Redis
-    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://redis:6379/0")
     
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "ollama")  # "ollama" or "bedrock"
     
     # Ollama Configuration (Local LLM)
-    OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://localhost:11434")
+    OLLAMA_URL: str = os.getenv("OLLAMA_URL", "http://ollama:11434")
     OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
     
     # AWS Bedrock Configuration (Cloud LLM - Fast Testing)
@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
     
     # ChromaDB Configuration (Vector Database for RAG)
-    CHROMADB_HOST: str = os.getenv("CHROMADB_HOST", "localhost")
+    CHROMADB_HOST: str = os.getenv("CHROMADB_HOST", "chromadb")
     CHROMADB_PORT: int = int(os.getenv("CHROMADB_PORT", "8000"))
     
     class Config:

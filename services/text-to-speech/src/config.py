@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     AZURE_SPEECH_REGION: str = os.getenv("AZURE_SPEECH_REGION", "eastus")
     DEFAULT_VOICE: str = "en-US-JennyNeural"
     AUDIO_DIR: str = os.getenv("AUDIO_DIR", "./data/audio")
+    COQUI_TTS_URL: str = os.getenv("COQUI_TTS_URL", "http://localhost:5002")
+    ENABLE_COQUI: bool = os.getenv("ENABLE_COQUI", "false").lower() == "true"
     
     class Config:
         env_file = ".env"

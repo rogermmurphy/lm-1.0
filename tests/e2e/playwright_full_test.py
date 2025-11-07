@@ -103,8 +103,8 @@ class E2ETestRunner:
         self.console_errors = []
         
         try:
-            # Navigate to login
-            await page.goto("http://localhost:3000/login", wait_until="networkidle")
+            # Navigate to login - Use Cloudflare URL for remote access
+            await page.goto("https://prescribed-plug-complexity-prince.trycloudflare.com/login", wait_until="networkidle")
             await page.wait_for_timeout(2000)
             
             # Check for console errors
@@ -155,8 +155,8 @@ class E2ETestRunner:
         self.console_errors = []
         
         try:
-            # Navigate to page
-            await page.goto(f"http://localhost:3000{url}", wait_until="networkidle")
+            # Navigate to page - Use Cloudflare URL for remote access
+            await page.goto(f"https://prescribed-plug-complexity-prince.trycloudflare.com{url}", wait_until="networkidle")
             await page.wait_for_timeout(2000)
             
             # Check for console errors

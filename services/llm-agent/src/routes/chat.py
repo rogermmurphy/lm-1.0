@@ -18,10 +18,16 @@ from ..schemas import (
     StudyMaterialUploadRequest,
     StudyMaterialResponse,
     MaterialsListResponse,
-    MessageResponse
+    MessageResponse,
+    ChatSpeakRequest,
+    ChatSpeakResponse,
+    ChatTranscribeResponse
 )
 from ..services import RAGService, LLMService
 from ..services.agent_service import AgentService
+import requests
+from fastapi import UploadFile, File
+import time
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -245,6 +251,44 @@ async def update_conversation(
     )
 
 
+@router.get("/conversations/{conversation_id}/messages")
+async def get_conversation_messages(
+    conversation_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Get all messages for a conversation
+    
+    - **conversation_id**: Conversation ID
+    """
+    conversation = db.query(Conversation).filter(
+        Conversation.id == conversation_id
+    ).first()
+    
+    if not conversation:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Conversation not found"
+        )
+    
+    messages = db.query(Message).filter(
+        Message.conversation_id == conversation_id
+    ).order_by(Message.created_at).all()
+    
+    return {
+        "conversation_id": conversation_id,
+        "messages": [
+            {
+                "id": msg.id,
+                "role": msg.role,
+                "content": msg.content,
+                "timestamp": msg.created_at.isoformat()
+            }
+            for msg in messages
+        ]
+    }
+
+
 @router.delete("/conversations/{conversation_id}", response_model=MessageResponse)
 async def delete_conversation(
     conversation_id: int,
@@ -351,3 +395,193 @@ async def upload_study_material(
         subject=material.subject,
         created_at=material.created_at
     )
+
+
+@router.get("/voices")
+async def get_available_voices():
+    """
+    Get list of available TTS voices
+    
+    Returns curated list of high-quality Azure TTS voices
+    """
+    # Curated list of best Azure voices based on POC 11 research
+    voices = [
+        {
+            "id": "en-US-AriaNeural",
+            "name": "Aria (Female, Clear)",
+            "language": "English (US)",
+            "gender": "Female",
+            "description": "Clear and professional",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-JennyNeural",
+            "name": "Jenny (Female, Friendly)",
+            "language": "English (US)",
+            "gender": "Female",
+            "description": "Warm and conversational",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-GuyNeural",
+            "name": "Guy (Male, Professional)",
+            "language": "English (US)",
+            "gender": "Male",
+            "description": "Clear and professional",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-DavisNeural",
+            "name": "Davis (Male, Confident)",
+            "language": "English (US)",
+            "gender": "Male",
+            "description": "Expressive and confident",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-JaneNeural",
+            "name": "Jane (Female, Natural)",
+            "language": "English (US)",
+            "gender": "Female",
+            "description": "Natural and friendly",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-JasonNeural",
+            "name": "Jason (Male, Casual)",
+            "language": "English (US)",
+            "gender": "Male",
+            "description": "Casual and friendly",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-SaraNeural",
+            "name": "Sara (Female, Soft)",
+            "language": "English (US)",
+            "gender": "Female",
+            "description": "Soft and gentle",
+            "provider": "azure"
+        },
+        {
+            "id": "en-US-TonyNeural",
+            "name": "Tony (Male, Narration)",
+            "language": "English (US)",
+            "gender": "Male",
+            "description": "Professional narrator",
+            "provider": "azure"
+        }
+    ]
+    
+    return {"voices": voices}
+
+
+@router.post("/speak", response_model=ChatSpeakResponse)
+async def speak_text(request: ChatSpeakRequest):
+    """
+    Convert text to speech using TTS service
+    
+    - **text**: Text to convert to speech
+    - **voice**: Optional voice selection (default: en-US-AriaNeural)
+    """
+    try:
+        # Call TTS service (container name: lm-tts, service name: tts-service)
+        tts_url = "http://tts-service:8000/tts/generate"
+        payload = {
+            "text": request.text,
+            "voice": request.voice or "en-US-AriaNeural"
+        }
+        
+        response = requests.post(tts_url, json=payload, timeout=10)
+        response.raise_for_status()
+        
+        data = response.json()
+        
+        return ChatSpeakResponse(
+            success=True,
+            audio_base64=data.get("audio_base64", ""),
+            duration=None  # TTS doesn't return duration currently
+        )
+        
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"TTS service unavailable: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate speech: {str(e)}"
+        )
+
+
+@router.post("/transcribe", response_model=ChatTranscribeResponse)
+async def transcribe_audio(audio_file: UploadFile = File(...)):
+    """
+    Transcribe audio to text using STT service
+    
+    - **audio_file**: Audio file to transcribe (mp3, wav, m4a, flac, ogg)
+    """
+    try:
+        # Read audio file
+        audio_content = await audio_file.read()
+        
+        # Send to STT service (container name: lm-stt, service name: stt-service)
+        stt_url = "http://stt-service:8000/transcribe/"
+        files = {"file": (audio_file.filename, audio_content, audio_file.content_type)}
+        data = {"language": "en"}
+        
+        response = requests.post(stt_url, files=files, data=data, timeout=10)
+        response.raise_for_status()
+        
+        job_data = response.json()
+        job_id = job_data.get("job_id")
+        
+        # Poll for result (max 30 seconds)
+        max_attempts = 15
+        for attempt in range(max_attempts):
+            time.sleep(2)  # Wait 2 seconds between polls
+            
+            status_url = f"http://stt-service:8000/transcribe/jobs/{job_id}"
+            status_response = requests.get(status_url, timeout=5)
+            status_response.raise_for_status()
+            
+            status_data = status_response.json()
+            
+            if status_data.get("status") == "completed":
+                # Get transcription result
+                result_url = f"http://stt-service:8000/transcribe/results/{job_id}"
+                result_response = requests.get(result_url, timeout=5)
+                result_response.raise_for_status()
+                
+                result_data = result_response.json()
+                transcription_text = result_data.get("transcription_text", "")
+                
+                return ChatTranscribeResponse(
+                    success=True,
+                    text=transcription_text,
+                    job_id=str(job_id)
+                )
+            
+            elif status_data.get("status") == "failed":
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Transcription failed"
+                )
+        
+        # Timeout - return job ID for client to poll
+        return ChatTranscribeResponse(
+            success=False,
+            text="Transcription is still processing. Please try again in a few seconds.",
+            job_id=str(job_id)
+        )
+        
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"STT service unavailable: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to transcribe audio: {str(e)}"
+        )

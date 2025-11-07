@@ -1,0 +1,22 @@
+# Development-only Dockerfile for Next.js
+FROM node:18
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Set environment
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+EXPOSE 3000
+
+# Run development server
+CMD ["npm", "run", "dev"]

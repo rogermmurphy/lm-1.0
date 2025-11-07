@@ -6,17 +6,7 @@ module.exports = {
     "./src/lib/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
-    extend: {
-      colors: {
-        lmPink: "#f6c6d0",
-        lmCream: "#fff7f2",
-        lmPurple: "#b89bff",
-        lmGray: "#444"
-      },
-      fontFamily: {
-        lm: ["Poppins", "sans-serif"]
-      }
-    }
+    extend: {},
   },
   plugins: [],
 };

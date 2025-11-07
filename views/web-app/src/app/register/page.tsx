@@ -44,13 +44,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-lmCream to-lmPink/20 px-4">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border-2 border-lmPink/30">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            Create Account
+          <h2 className="text-center text-3xl font-bold text-lmGray">
+            Create Account 🩷
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-lmGray/70">
             Join Little Monster and start learning with AI
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function RegisterPage() {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="username" className="block text-sm font-medium text-lmGray">
                 Username (optional)
               </label>
               <input
@@ -74,13 +74,13 @@ export default function RegisterPage() {
                 autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-lmPurple focus:border-lmPurple"
                 placeholder="johndoe"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-lmGray">
                 Email address
               </label>
               <input
@@ -91,13 +91,13 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-lmPurple focus:border-lmPurple"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-lmGray">
                 Password
               </label>
               <input
@@ -108,16 +108,16 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-lmPurple focus:border-lmPurple"
                 placeholder="••••••••"
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-lmGray/60">
                 Must be at least 8 characters
               </p>
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-lmGray">
                 Confirm Password
               </label>
               <input
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-lmPurple focus:border-lmPurple"
                 placeholder="••••••••"
               />
             </div>
@@ -138,16 +138,16 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-lmPink hover:bg-lmPink/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lmPurple disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Creating account...' : 'Sign up'}
             </button>
           </div>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-lmGray/70">
               Already have an account?{' '}
-              <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/login" className="font-medium text-lmPurple hover:text-lmPurple/80">
                 Sign in
               </Link>
             </p>

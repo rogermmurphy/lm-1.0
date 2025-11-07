@@ -47,21 +47,21 @@ export default function LogsPage() {
       case 'ERROR': return 'text-red-700 bg-red-50';
       case 'WARN': return 'text-yellow-700 bg-yellow-50';
       case 'INFO': return 'text-green-700 bg-green-50';
-      case 'DEBUG': return 'text-blue-700 bg-blue-50';
-      default: return 'text-gray-700 bg-gray-50';
+      case 'DEBUG': return 'text-lmPurple bg-lmPurple/10';
+      default: return 'text-lmGray bg-lmCream';
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-lmPink/30">
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-lmGray mb-2">
                 🔍 Application Logs
               </h1>
-              <p className="text-gray-600">
+              <p className="text-lmGray/70">
                 Verbose logging of all UI operations - automatically refreshes
               </p>
             </div>
@@ -84,9 +84,9 @@ export default function LogsPage() {
           {/* Summary Stats */}
           {summary && (
             <div className="grid grid-cols-5 gap-4 mb-4">
-              <div className="bg-gray-50 rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-gray-900">{summary.total}</div>
-                <div className="text-sm text-gray-600">Total</div>
+              <div className="bg-lmCream rounded-lg p-4 text-center border border-lmPink/30">
+                <div className="text-2xl font-bold text-lmGray">{summary.total}</div>
+                <div className="text-sm text-lmGray/70">Total</div>
               </div>
               <div className="bg-red-50 rounded-lg p-4 text-center">
                 <div className="text-2xl font-bold text-red-700">{summary.errors}</div>
@@ -100,9 +100,9 @@ export default function LogsPage() {
                 <div className="text-2xl font-bold text-green-700">{summary.info}</div>
                 <div className="text-sm text-green-600">Info</div>
               </div>
-              <div className="bg-blue-50 rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-blue-700">{summary.debug}</div>
-                <div className="text-sm text-blue-600">Debug</div>
+              <div className="bg-lmPurple/10 rounded-lg p-4 text-center border border-lmPurple/30">
+                <div className="text-2xl font-bold text-lmPurple">{summary.debug}</div>
+                <div className="text-sm text-lmPurple">Debug</div>
               </div>
             </div>
           )}
@@ -115,13 +115,13 @@ export default function LogsPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search logs..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-lmPink/30 rounded-md focus:outline-none focus:ring-2 focus:ring-lmPurple"
               />
             </div>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-lmPink/30 rounded-md focus:outline-none focus:ring-2 focus:ring-lmPurple"
             >
               <option value="ALL">All Levels</option>
               <option value="ERROR">Errors Only</option>
@@ -152,7 +152,7 @@ export default function LogsPage() {
                     log.level === 'ERROR' ? 'bg-red-900 text-red-200' :
                     log.level === 'WARN' ? 'bg-yellow-900 text-yellow-200' :
                     log.level === 'INFO' ? 'bg-green-900 text-green-200' :
-                    'bg-blue-900 text-blue-200'
+                    'bg-lmPurple text-white'
                   }`}>
                     {log.level}
                   </span>
@@ -181,9 +181,9 @@ export default function LogsPage() {
         </div>
 
         {/* Info */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">💡 About Logs</h3>
-          <ul className="text-sm text-blue-800 space-y-1">
+        <div className="mt-6 bg-gradient-to-r from-lmCream to-lmPink/20 border-2 border-lmPink/30 rounded-lg p-4">
+          <h3 className="font-semibold text-lmGray mb-2">💡 About Logs</h3>
+          <ul className="text-sm text-lmGray/80 space-y-1">
             <li>• Logs are stored in browser localStorage (max 1000 entries)</li>
             <li>• All API requests/responses are logged with full details</li>
             <li>• Page automatically refreshes logs every 2 seconds</li>

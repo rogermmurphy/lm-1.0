@@ -39,11 +39,11 @@ export default function TTSPage() {
 
   const base64ToBlob = (base64: string, contentType: string) => {
     const byteCharacters = atob(base64);
-    const byteArrays = [];
+    const byteArrays: BlobPart[] = [];
 
     for (let offset = 0; offset < byteCharacters.length; offset += 512) {
       const slice = byteCharacters.slice(offset, offset + 512);
-      const byteNumbers = new Array(slice.length);
+      const byteNumbers: number[] = new Array(slice.length);
       
       for (let i = 0; i < slice.length; i++) {
         byteNumbers[i] = slice.charCodeAt(i);
@@ -85,12 +85,12 @@ export default function TTSPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-lmPink/30">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-lmGray mb-2">
             Text-to-Speech
           </h1>
-          <p className="text-gray-600">
+          <p className="text-lmGray/70">
             Generate natural speech from text using Azure TTS
           </p>
         </div>
@@ -104,7 +104,7 @@ export default function TTSPage() {
         <div className="space-y-6">
           {/* Text Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-lmGray mb-2">
               Text to Convert
             </label>
             <textarea
@@ -112,22 +112,22 @@ export default function TTSPage() {
               onChange={(e) => setText(e.target.value)}
               placeholder="Enter the text you want to convert to speech..."
               rows={8}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lmPurple"
             />
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-lmGray/60">
               {text.length} characters
             </p>
           </div>
 
           {/* Voice Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-lmGray mb-2">
               Voice
             </label>
             <select
               value={voice}
               onChange={(e) => setVoice(e.target.value)}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full px-3 py-2 border border-lmPink/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lmPurple"
             >
               {voices.map((v) => (
                 <option key={v.value} value={v.value}>
@@ -141,15 +141,15 @@ export default function TTSPage() {
           <button
             onClick={handleGenerate}
             disabled={!text.trim() || isGenerating}
-            className="w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="w-full py-3 px-4 bg-lmPink text-white rounded-md hover:bg-lmPink/90 focus:outline-none focus:ring-2 focus:ring-lmPurple disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
             {isGenerating ? 'Generating...' : '🔊 Generate Speech'}
           </button>
 
           {/* Audio Player */}
           {audioUrl && (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 space-y-4">
-              <h3 className="font-semibold text-gray-900">Generated Audio</h3>
+            <div className="bg-lmCream border-2 border-lmPink/30 rounded-lg p-6 space-y-4">
+              <h3 className="font-semibold text-lmGray">Generated Audio</h3>
               
               <audio
                 ref={audioRef}
@@ -167,7 +167,7 @@ export default function TTSPage() {
                 </button>
                 <button
                   onClick={handleNewGeneration}
-                  className="flex-1 py-2 px-4 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium"
+                  className="flex-1 py-2 px-4 bg-lmCream border border-lmPink/30 text-lmGray rounded-md hover:bg-lmPink/10 font-medium"
                 >
                   ✨ New Generation
                 </button>
@@ -176,9 +176,9 @@ export default function TTSPage() {
           )}
 
           {/* Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-2">💡 Features</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
+          <div className="bg-gradient-to-r from-lmCream to-lmPink/20 border-2 border-lmPink/30 rounded-lg p-4">
+            <h3 className="font-semibold text-lmGray mb-2">💡 Features</h3>
+            <ul className="text-sm text-lmGray/80 space-y-1">
               <li>• High-quality HD voices powered by Azure</li>
               <li>• Fast generation (typically under 1 second)</li>
               <li>• Multiple voice options available</li>

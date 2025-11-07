@@ -3,14 +3,24 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone', // Enable for Docker deployment
   
-  // Allow access from any network interface (0.0.0.0)
-  // This enables access via localhost, 192.168.x.x, and public IP
-  experimental: {
-    allowMiddlewareResponseBody: true,
-  },
+  // Disable X-Powered-By header
+  poweredByHeader: false,
+  
+  // Compress responses
+  compress: true,
   
   env: {
     API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost',
+  },
+  
+  // Proxy API calls to nginx gateway (development only)
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:80/api/:path*',
+      },
+    ]
   },
   
   // CORS and security headers

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Little Monster GPA - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  
+  <!-- Top Navigation Bar -->
+  <nav class="bg-white border-b-2 border-gray-100 sticky top-0 z-50 shadow-sm">
+    <div class="px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <div class="h-10 w-10 flex items-center justify-center rounded-xl bg-blue-600 shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-gray-900">Little Monster GPA</h1>
+        </div>
+        
+        <!-- User Menu -->
+        <div class="flex items-center space-x-4">
+          <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+          </button>
+          <div class="flex items-center space-x-3">
+            <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
+              JS
+            </div>
+            <div class="text-sm">
+              <p class="font-semibold text-gray-900">John Smith</p>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Dashboard Layout (3 Columns) -->
+  <div class="flex h-screen overflow-hidden pt-20">
+    
+    <!-- LEFT SIDEBAR: Classes List, Calendar, Games (~250px) -->
+    <aside class="w-64 bg-white border-r-2 border-gray-100 overflow-y-auto flex-shrink-0">
+      <div class="p-4 space-y-6">
+        
+        <!-- Classes Section -->
+        <div>
+          <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">My Classes</h2>
+          <div class="space-y-2">
+            <!-- Class Item (Active) -->
+            <button class="w-full text-left px-4 py-3 rounded-xl bg-blue-50 border-2 border-blue-200 hover:bg-blue-100 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                  M
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-900 truncate">Math 101</p>
+                  <p class="text-xs text-gray-500">Dr. Johnson</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Class Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                  P
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-900 truncate">Physics 201</p>
+                  <p class="text-xs text-gray-500">Dr. Williams</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Class Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-green-600 flex items-center justify-center text-white font-bold text-sm">
+                  C
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-900 truncate">Chemistry 301</p>
+                  <p class="text-xs text-gray-500">Dr. Brown</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Class Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-bold text-sm">
+                  H
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-900 truncate">History 150</p>
+                  <p class="text-xs text-gray-500">Dr. Davis</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Class Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-yellow-600 flex items-center justify-center text-white font-bold text-sm">
+                  E
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-900 truncate">English 102</p>
+                  <p class="text-xs text-gray-500">Dr. Martinez</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Add Class Button -->
+            <button class="w-full px-4 py-3 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-600 hover:bg-blue-50 transition-all group">
+              <div class="flex items-center justify-center space-x-2">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="font-semibold text-gray-600 group-hover:text-blue-600">Add Class</span>
+              </div>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Calendar Button -->
+        <div>
+          <button class="w-full px-4 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all">
+            <div class="flex items-center space-x-3">
+              <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="font-semibold text-gray-900">Calendar</span>
+            </div>
+          </button>
+        </div>
+        
+        <!-- Available Games Section -->
+        <div>
+          <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Available Games</h2>
+          <div class="space-y-2">
+            <!-- Game Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900">Flashcards</p>
+                  <p class="text-xs text-gray-500">Study mode</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Game Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-orange-600 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900">Quiz Arena</p>
+                  <p class="text-xs text-gray-500">Compete & win</p>
+                </div>
+              </div>
+            </button>
+            
+            <!-- Game Item -->
+            <button class="w-full text-left px-4 py-3 rounded-xl hover:bg-gray-50 border-2 border-transparent hover:border-gray-200 transition-all">
+              <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 rounded-lg bg-pink-600 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-900">Snake Game</p>
+                  <p class="text-xs text-gray-500">Fun break</p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA: Dashboard Metrics (Center, flex-1) -->
+    <main class="flex-1 overflow-y-auto bg-gray-50 p-8">
+      <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-black text-gray-900 mb-2">Dashboard</h1>
+          <p class="text-gray-600">Welcome back, John! Here's your study overview.</p>
+        </div>
+        
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          
+          <!-- Metric: 7-Day Activity -->
+          <div class="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-6 hover:shadow-2xl transition-all">
+            <div class="flex items-center justify-between mb-4">
+              <div class="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <span class="text-sm font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">+12%</span>
+            </div>
+            <h3 class="text-sm font-bold text-gray-500 mb-2">7-Day Activity</h3>
+            <p class="text-4xl font-black text-blue-600">24 hrs</p>
+            <p class="text-xs text-gray-500 mt-2">Total study time this week</p>
+          </div>
+          
+          <!-- Metric: Games Played -->
+          <div class="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-6 hover:shadow-2xl transition-all">
+            <div class="flex items-center justify-between mb-4">
+              <div class="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center">
+                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <span class="text-sm font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">+3</span>
+            </div>
+            <h3 class="text-sm font-bold text-gray-500 mb-2">Games Played</h3>
+            <p class="text-4xl font-black text-green-600">15</p>
+            <p class="text-xs text-gray-500 mt-2">Fun learning sessions</p>
+          </div>
+          
+          <!-- Metric: Active Classes -->
+          <div class="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-6 hover:shadow-2xl transition-all">
+            <div class="flex items-center justify-between mb-4">
+              <div class="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center">
+                <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <span class="text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full">Active</span>
+            </div>
+            <h3 class="text-sm font-bold text-gray-500 mb-2">Active Classes</h3>
+            <p class="text-4xl font-black text-purple-600">5</p>
+            <p class="text-xs text-gray-500 mt-2">Currently enrolled</p>
+          </div>
+          
+          <!-- Metric: Assignments Due -->
+          <div class="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-6 hover:shadow-2xl transition-all">
+            <div class="flex items-center justify-between mb-4">
+              <div class="h-12 w-12 rounded-xl bg-red-100 flex items-center justify-center">
+                <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <span class="text-sm font-semibold text-red-600 bg-red-100 px-3 py-1 rounded-full">Due Soon</span>
+            </div>
+            <h3 class="text-sm font-bold text-gray-500 mb-2">Assignments Due</h3>
+            <p class="text-4xl font-black text-red-600">3</p>
+            <p class="text-xs text-gray-500 mt-2">Next 7 days</p>
+          </div>
+        </div>
+        
+        <!-- Recent Activity Section -->
+        <div class="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
+          <div class="space-y-4">
+            <!-- Activity Item -->
+            <div class="flex items-start space-x-4 pb-4 border-b border-gray-100">
+              <div class="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="font-semibold text-gray-900">Completed Math 101 Assignment</p>
+                <p class="text-sm text-gray-500">2 hours ago</p>
+              </div>
+            </div>
+            
+            <!-- Activity Item -->
+            <div class="flex items-start space-x-4 pb-4 border-b border-gray-100">
+              <div class="h-10 w-10 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="font-semibold text-gray-900">Reviewed 50 Physics Flashcards</p>
+                <p class="text-sm text-gray-500">5 hours ago</p>
+              </div>
+            </div>
+            
+            <!-- Activity Item -->
+            <div class="flex items-start space-x-4">
+              <div class="h-10 w-10 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="font-semibold text-gray-900">Attended Chemistry 301 Lecture</p>
+                <p class="text-sm text-gray-500">Yesterday</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR: AI Chat Bot (~350px) -->
+    <aside class="w-96 bg-white border-l-2 border-gray-100 flex flex-col flex-shrink-0">
+      <!-- Chat Header -->
+      <div class="p-6 border-b-2 border-gray-100">
+        <div class="flex items-center space-x-3">
+          <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-gray-900">AI Assistant</h2>
+            <p class="text-xs text-gray-500">Always here to help</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Chat Messages Area -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-4">
+        <!-- AI Message -->
+        <div class="flex items-start space-x-3">
+          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3">
+              <p class="text-sm text-gray-900">Hello John! 👋 I'm your AI study assistant. How can I help you today?</p>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Just now</p>
+          </div>
+        </div>
+        
+        <!-- User Message -->
+        <div class="flex items-start space-x-3 justify-end">
+          <div class="flex-1 flex flex-col items-end">
+            <div class="bg-blue-600 rounded-2xl rounded-tr-none px-4 py-3 max-w-xs">
+              <p class="text-sm text-white">Can you help me review my Math 101 notes?</p>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Just now</p>
+          </div>
+          <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0 text-white font-bold text-sm">
+            JS
+          </div>
+        </div>
+        
+        <!-- AI Message with Suggestions -->
+        <div class="flex items-start space-x-3">
+          <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531

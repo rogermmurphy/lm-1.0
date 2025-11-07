@@ -18,7 +18,7 @@ class AIService:
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
-        self.model_id = "anthropic.claude-3-5-sonnet-20241022-v2:0"
+        self.model_id = "us.anthropic.claude-sonnet-4-20250514-v1:0"
     
     def generate_notes(self, source_content: str, source_type: str) -> Dict[str, str]:
         """
@@ -118,7 +118,9 @@ Each flashcard should have:
 Content:
 {source_content}
 
-Respond in JSON format as an array:
+IMPORTANT: Respond ONLY with a valid JSON array. Do not include any markdown formatting, backticks, or explanatory text. Start directly with [ and end with ].
+
+Example format:
 [
     {{
         "front_text": "Question or term",
@@ -127,7 +129,30 @@ Respond in JSON format as an array:
 ]"""
         
         response = self._generate(prompt, max_tokens=2048)
-        return json.loads(response)
+        
+        # Log response for debugging
+        print(f"[DEBUG] Bedrock raw response: {response[:200]}")
+        
+        # Clean response - remove markdown formatting if present
+        cleaned = response.strip()
+        if cleaned.startswith("```json"):
+            cleaned = cleaned[7:]
+        elif cleaned.startswith("```"):
+            cleaned = cleaned[3:]
+        if cleaned.endswith("```"):
+            cleaned = cleaned[:-3]
+        cleaned = cleaned.strip()
+        
+        # Parse JSON with error handling
+        try:
+            result = json.loads(cleaned)
+            if not isinstance(result, list):
+                raise ValueError(f"Expected list, got {type(result)}")
+            return result
+        except json.JSONDecodeError as e:
+            print(f"[ERROR] JSON parse failed: {e}")
+            print(f"[ERROR] Cleaned response: {cleaned[:500]}")
+            raise Exception(f"Failed to parse Bedrock response as JSON: {str(e)}")
     
     def _generate(self, prompt: str, temperature: float = 0.7, max_tokens: int = 2048) -> str:
         """

@@ -168,7 +168,7 @@ services:
     networks:
       - lm-network
 
-  # Text-to-Speech Service
+  # Text-to-Speech Service (Azure)
   tts-service:
     build:
       context: .
@@ -182,11 +182,27 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
       - AZURE_SPEECH_KEY=${AZURE_SPEECH_KEY}
       - AZURE_SPEECH_REGION=eastus
+      - ENABLE_COQUI=false
     depends_on:
       - postgres
     restart: unless-stopped
     networks:
       - lm-network
+
+  # Coqui TTS Service - DISABLED (installation failures)
+  # See DUAL-PROVIDER-TTS-STATUS.md for details
+  # coqui-tts:
+  #   build:
+  #     context: ./services/coqui-server
+  #     dockerfile: Dockerfile
+  #   container_name: lm-coqui-tts
+  #   ports:
+  #     - "8014:5002"
+  #   volumes:
+  #     - coqui-models:/root/.local/share/tts
+  #   restart: unless-stopped
+  #   networks:
+  #     - lm-network
 
   # Audio Recording Service
   recording-service:
@@ -366,10 +382,10 @@ services:
     volumes:
       - ./services/study-analytics/src:/app/src
     environment:
-      - database_url=postgresql://postgres:postgres@postgres:5432/littlemonster
-      - jwt_secret_key=${JWT_SECRET_KEY}
-      - jwt_algorithm=HS256
-      - service_port=8012
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ALGORITHM=HS256
+      - SERVICE_PORT=8012
     depends_on:
       postgres:
         condition: service_healthy
@@ -388,10 +404,10 @@ services:
     volumes:
       - ./services/notifications/src:/app/src
     environment:
-      - database_url=postgresql://postgres:postgres@postgres:5432/littlemonster
-      - jwt_secret=${JWT_SECRET_KEY}
-      - jwt_algorithm=HS256
-      - service_port=8013
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/littlemonster
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ALGORITHM=HS256
+      - SERVICE_PORT=8013
     depends_on:
       postgres:
         condition: service_healthy
@@ -403,15 +419,14 @@ services:
   web-app:
     build:
       context: ./views/web-app
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: lm-web-app
     ports:
       - "3000:3000"
+    volumes:
+      - ./views/web-app/src:/app/src
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost
-      - NODE_ENV=production
-    depends_on:
-      - nginx
+      - NODE_ENV=development
     restart: unless-stopped
     networks:
       - lm-network
@@ -471,6 +486,8 @@ volumes:
     name: lm-ollama-data
   content-uploads:
     name: lm-content-uploads
+  coqui-models:
+    name: lm-coqui-models
 
 networks:
   lm-network:

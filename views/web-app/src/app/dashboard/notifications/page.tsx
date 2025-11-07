@@ -97,20 +97,20 @@ export default function NotificationsPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-sm">
+      <div className="bg-white rounded-lg shadow-sm border-2 border-lmPink/30">
         {/* Header */}
-        <div className="border-b border-gray-200 px-6 py-4">
+        <div className="border-b-2 border-lmPink/30 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-              <p className="text-sm text-gray-600 mt-1">
+              <h1 className="text-2xl font-bold text-lmGray">Notifications</h1>
+              <p className="text-sm text-lmGray/70 mt-1">
                 {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}` : 'All caught up!'}
               </p>
             </div>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium"
+                className="px-4 py-2 bg-lmPink text-white rounded-md hover:bg-lmPink/90 text-sm font-medium"
               >
                 Mark all as read
               </button>
@@ -123,8 +123,8 @@ export default function NotificationsPage() {
               onClick={() => setFilter('all')}
               className={`px-4 py-2 text-sm font-medium rounded-md ${
                 filter === 'all'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-lmPurple/20 text-lmPurple'
+                  : 'text-lmGray/70 hover:text-lmGray'
               }`}
             >
               All
@@ -133,8 +133,8 @@ export default function NotificationsPage() {
               onClick={() => setFilter('unread')}
               className={`px-4 py-2 text-sm font-medium rounded-md ${
                 filter === 'unread'
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-lmPurple/20 text-lmPurple'
+                  : 'text-lmGray/70 hover:text-lmGray'
               }`}
             >
               Unread
@@ -143,21 +143,21 @@ export default function NotificationsPage() {
         </div>
 
         {/* Notifications List */}
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-lmPink/20">
           {loading ? (
-            <div className="px-6 py-12 text-center text-gray-500">
+            <div className="px-6 py-12 text-center text-lmGray/60">
               Loading notifications...
             </div>
           ) : notificationsList.length === 0 ? (
-            <div className="px-6 py-12 text-center text-gray-500">
+            <div className="px-6 py-12 text-center text-lmGray/60">
               {filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}
             </div>
           ) : (
             notificationsList.map((notification) => (
               <div
                 key={notification.id}
-                className={`px-6 py-4 hover:bg-gray-50 ${
-                  !notification.read ? 'bg-blue-50' : ''
+                className={`px-6 py-4 hover:bg-lmCream ${
+                  !notification.read ? 'bg-lmPink/10' : ''
                 }`}
               >
                 <div className="flex items-start justify-between">
@@ -165,17 +165,17 @@ export default function NotificationsPage() {
                     <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
-                        <h3 className="text-sm font-semibold text-gray-900">
+                        <h3 className="text-sm font-semibold text-lmGray">
                           {notification.title}
                         </h3>
                         {!notification.read && (
-                          <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                          <span className="w-2 h-2 bg-lmPurple rounded-full"></span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-lmGray/70 mt-1">
                         {notification.message}
                       </p>
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className="text-xs text-lmGray/50 mt-2">
                         {timeAgo(notification.created_at)}
                       </p>
                     </div>
@@ -186,7 +186,7 @@ export default function NotificationsPage() {
                     {!notification.read && (
                       <button
                         onClick={() => handleMarkAsRead(notification.id)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                        className="p-2 text-lmPurple hover:bg-lmPurple/10 rounded-md"
                         title="Mark as read"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

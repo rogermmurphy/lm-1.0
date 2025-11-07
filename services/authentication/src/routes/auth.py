@@ -169,6 +169,7 @@ async def login(
         "revoked": True,
         "revoked_at": datetime.utcnow()
     })
+    db.commit()  # Commit revocation before generating new tokens
     
     # Generate tokens
     access_token = jwt_utils.create_access_token(

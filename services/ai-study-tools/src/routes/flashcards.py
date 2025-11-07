@@ -295,6 +295,39 @@ async def review_card(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/generate-from-text")
+async def generate_flashcards_from_text(
+    request: dict,
+    ai_service: AIService = Depends(get_ai_service)
+):
+    """Generate flashcards directly from provided text without requiring stored materials"""
+    try:
+        # Extract parameters from request body
+        user_id = request.get("user_id", 1)
+        topic = request.get("topic", "Study Material")
+        content_text = request.get("content_text", "")
+        card_count = request.get("card_count", 10)
+        
+        if not content_text:
+            raise HTTPException(status_code=400, detail="content_text is required")
+        
+        # Generate flashcards using AI
+        cards_data = ai_service.generate_flashcards(content_text, card_count)
+        
+        # Return cards directly (no database storage for ephemeral content)
+        return {
+            "message": f"Generated {len(cards_data)} flashcards",
+            "topic": topic,
+            "cards": cards_data,
+            "count": len(cards_data)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/decks/user/{user_id}", response_model=List[FlashcardDeckResponse])
 async def list_user_decks(user_id: int, conn = Depends(get_db)):
     """List all decks for a user"""

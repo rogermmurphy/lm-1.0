@@ -81,3 +81,23 @@ class MaterialsListResponse(BaseModel):
 class MessageResponse(BaseModel):
     """Generic message response"""
     message: str
+
+
+class ChatSpeakRequest(BaseModel):
+    """Request to convert chat response to speech"""
+    text: str = Field(min_length=1, max_length=5000)
+    voice: Optional[str] = None
+
+
+class ChatSpeakResponse(BaseModel):
+    """Response from TTS generation"""
+    success: bool
+    audio_base64: str
+    duration: Optional[float] = None
+
+
+class ChatTranscribeResponse(BaseModel):
+    """Response from STT transcription"""
+    success: bool
+    text: str
+    job_id: Optional[str] = None

@@ -23,7 +23,7 @@ export default function DashboardWidget({
   href
 }: DashboardWidgetProps) {
   const Widget = href ? 'a' : 'div';
-  const widgetProps = href ? { href, className: `block ${color} bg-opacity-10 p-6 rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer` } : { className: `${color} bg-opacity-10 p-6 rounded-lg shadow-md` };
+  const widgetProps = href ? { href, className: `block ${color} bg-opacity-10 p-6 rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer border-2 border-lmPink/30` } : { className: `${color} bg-opacity-10 p-6 rounded-lg shadow-md border-2 border-lmPink/30` };
 
   return (
     <Widget {...widgetProps}>
@@ -31,14 +31,14 @@ export default function DashboardWidget({
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span className="text-2xl">{icon}</span>
-            <h3 className="text-sm font-medium text-gray-600">{title}</h3>
+            <h3 className="text-sm font-medium text-lmGray/70">{title}</h3>
           </div>
           <div className="mt-3">
             <div className={`text-3xl font-bold ${color.replace('bg-', 'text-')}`}>
               {value}
             </div>
             {subtitle && (
-              <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+              <p className="mt-1 text-sm text-lmGray/60">{subtitle}</p>
             )}
           </div>
           {trend && (
@@ -46,7 +46,7 @@ export default function DashboardWidget({
               <span className={`text-sm font-medium ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
                 {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
               </span>
-              <span className="ml-2 text-sm text-gray-500">vs last week</span>
+              <span className="ml-2 text-sm text-lmGray/60">vs last week</span>
             </div>
           )}
         </div>

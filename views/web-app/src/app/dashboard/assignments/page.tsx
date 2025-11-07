@@ -45,7 +45,7 @@ export default function AssignmentsPage() {
       const token = localStorage.getItem('accessToken');
       
       // Fetch classes
-      const classesRes = await fetch('http://localhost/api/classes', {
+      const classesRes = await fetch('/api/classes', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (classesRes.ok) {
@@ -54,8 +54,8 @@ export default function AssignmentsPage() {
       
       // Fetch assignments
       const url = filter === 'all' 
-        ? 'http://localhost/api/assignments'
-        : `http://localhost/api/assignments?status_filter=${filter}`;
+        ? '/api/assignments'
+        : `/api/assignments?status_filter=${filter}`;
         
       const assignmentsRes = await fetch(url, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -74,7 +74,7 @@ export default function AssignmentsPage() {
   const createAssignment = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost/api/assignments', {
+      const response = await fetch('/api/assignments', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -104,7 +104,7 @@ export default function AssignmentsPage() {
   const updateStatus = async (id: number, newStatus: string) => {
     try {
       const token = localStorage.getItem('accessToken');
-      await fetch(`http://localhost/api/assignments/${id}/status?new_status=${newStatus}`, {
+      await fetch(`/api/assignments/${id}/status?new_status=${newStatus}`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -119,7 +119,7 @@ export default function AssignmentsPage() {
     
     try {
       const token = localStorage.getItem('accessToken');
-      await fetch(`http://localhost/api/assignments/${id}`, {
+      await fetch(`/api/assignments/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -130,7 +130,7 @@ export default function AssignmentsPage() {
   };
 
   const getClassColor = (classId: number) => {
-    return classes.find(c => c.id === classId)?.color || '#3B82F6';
+    return classes.find(c => c.id === classId)?.color || '#f6c6d0';
   };
 
   const getClassName = (classId: number) => {
@@ -140,17 +140,17 @@ export default function AssignmentsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed': return 'bg-green-100 text-green-800';
-      case 'in-progress': return 'bg-yellow-100 text-yellow-800';
+      case 'in-progress': return 'bg-lmPurple/20 text-lmPurple';
       case 'overdue': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      default: return 'bg-lmCream text-lmGray';
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'text-red-600';
-      case 'medium': return 'text-yellow-600';
-      default: return 'text-gray-600';
+      case 'medium': return 'text-lmPurple';
+      default: return 'text-lmGray/70';
     }
   };
 
@@ -161,10 +161,10 @@ export default function AssignmentsPage() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Assignments</h1>
+        <h1 className="text-3xl font-bold text-lmGray">Assignments</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-lmPink text-white px-4 py-2 rounded hover:bg-lmPink/90"
         >
           + Add Assignment
         </button>
@@ -178,8 +178,8 @@ export default function AssignmentsPage() {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded ${
               filter === f
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 hover:bg-gray-300'
+                ? 'bg-lmPink text-white'
+                : 'bg-lmCream border border-lmPink/30 text-lmGray hover:bg-lmPink/10'
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1).replace('-', ' ')}
@@ -189,7 +189,7 @@ export default function AssignmentsPage() {
 
       {/* Assignments List */}
       {assignments.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-lmGray/60">
           <p>No assignments found. Click "Add Assignment" to create one!</p>
         </div>
       ) : (
@@ -197,13 +197,13 @@ export default function AssignmentsPage() {
           {assignments.map((assignment) => (
             <div
               key={assignment.id}
-              className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+              className="border-2 border-lmPink/30 rounded-lg p-4 hover:shadow-md transition-shadow bg-white"
               style={{ borderLeftColor: getClassColor(assignment.class_id), borderLeftWidth: '4px' }}
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-bold text-lg">{assignment.title}</h3>
+                    <h3 className="font-bold text-lg text-lmGray">{assignment.title}</h3>
                     <span className={`text-xs px-2 py-1 rounded ${getStatusColor(assignment.status)}`}>
                       {assignment.status}
                     </span>
@@ -212,15 +212,15 @@ export default function AssignmentsPage() {
                     </span>
                   </div>
                   
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm text-lmGray/70 mb-2">
                     Class: {getClassName(assignment.class_id)} | Type: {assignment.type}
                   </p>
                   
                   {assignment.description && (
-                    <p className="text-sm text-gray-700 mb-2">{assignment.description}</p>
+                    <p className="text-sm text-lmGray/80 mb-2">{assignment.description}</p>
                   )}
                   
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-lmGray/70">
                     Due: {new Date(assignment.due_date).toLocaleString()}
                   </p>
                 </div>
@@ -250,16 +250,16 @@ export default function AssignmentsPage() {
       {/* Create Assignment Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Add New Assignment</h2>
+          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-lmPink/30">
+            <h2 className="text-2xl font-bold mb-4 text-lmGray">Add New Assignment</h2>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Class *</label>
+                <label className="block text-sm font-medium mb-1 text-lmGray">Class *</label>
                 <select
                   value={newAssignment.class_id}
                   onChange={(e) => setNewAssignment({...newAssignment, class_id: parseInt(e.target.value)})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border border-lmPink/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 >
                   <option value={0}>Select a class</option>
                   {classes.map((cls) => (
@@ -269,22 +269,22 @@ export default function AssignmentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Title *</label>
+                <label className="block text-sm font-medium mb-1 text-lmGray">Title *</label>
                 <input
                   type="text"
                   value={newAssignment.title}
                   onChange={(e) => setNewAssignment({...newAssignment, title: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border border-lmPink/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                   placeholder="e.g., Chapter 5 Homework"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Type</label>
+                <label className="block text-sm font-medium mb-1 text-lmGray">Type</label>
                 <select
                   value={newAssignment.type}
                   onChange={(e) => setNewAssignment({...newAssignment, type: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border border-lmPink/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 >
                   <option value="homework">Homework</option>
                   <option value="project">Project</option>
@@ -295,32 +295,32 @@ export default function AssignmentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1 text-lmGray">Description</label>
                 <textarea
                   value={newAssignment.description}
                   onChange={(e) => setNewAssignment({...newAssignment, description: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border border-lmPink/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                   rows={3}
                   placeholder="Assignment details..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Due Date *</label>
+                <label className="block text-sm font-medium mb-1 text-lmGray">Due Date *</label>
                 <input
                   type="datetime-local"
                   value={newAssignment.due_date}
                   onChange={(e) => setNewAssignment({...newAssignment, due_date: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border border-lmPink/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Priority</label>
+                <label className="block text-sm font-medium mb-1 text-lmGray">Priority</label>
                 <select
                   value={newAssignment.priority}
                   onChange={(e) => setNewAssignment({...newAssignment, priority: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border border-lmPink/30 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lmPurple"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -333,13 +333,13 @@ export default function AssignmentsPage() {
               <button
                 onClick={createAssignment}
                 disabled={!newAssignment.title || !newAssignment.class_id || !newAssignment.due_date}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+                className="flex-1 bg-lmPink text-white px-4 py-2 rounded hover:bg-lmPink/90 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Create Assignment
               </button>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
+                className="flex-1 bg-lmCream border border-lmPink/30 text-lmGray px-4 py-2 rounded hover:bg-lmPink/10"
               >
                 Cancel
               </button>

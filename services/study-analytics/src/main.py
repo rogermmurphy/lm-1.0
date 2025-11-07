@@ -22,6 +22,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Register routers
+app.include_router(sessions.router, prefix="/api")
+app.include_router(goals.router, prefix="/api")
+
 # Configure CORS
 # CORS handled by nginx gateway
 
